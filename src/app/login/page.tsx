@@ -3,29 +3,31 @@ import { useState } from "react"
 import { useAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { toast } from "@/lib/toast"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
   const { login } = useAuth()
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
   e.preventDefault()
-  setError("")
+
+  toast.loading("Accesso in corso...")
 
   try {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password }),
     })
 
     const data = await res.json()
+    toast.dismiss()
 
     if (!res.ok) {
-      setError(data.error || "Errore durante il login")
+      toast.error(data.error || "❌ Errore durante il login")
       return
     }
 
@@ -36,11 +38,14 @@ export default function LoginPage() {
       // aggiorno contesto utente
       login(data.user, data.token)
 
+      toast.success("✅ Login effettuato con successo!")
+
       // redirect alla home
       router.push("/")
     }
   } catch (err) {
-    setError("Impossibile connettersi al server")
+    toast.dismiss()
+    toast.error("❌ Impossibile connettersi al server")
   }
 }
 
@@ -49,7 +54,6 @@ export default function LoginPage() {
       <h1 className="text-2xl mb-4">Login</h1>
 
       {/* Mostra errore se presente */}
-      {error && <p className="text-red-600 mb-4">{error}</p>}
 
       <form onSubmit={handleLogin} className="space-y-4">
         <input

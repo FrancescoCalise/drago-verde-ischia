@@ -1,13 +1,17 @@
-import Navbar from "@/components/Navbar"
+import Hero from "@/components/Hero"
+import AboutUs from "@/components/AboutUs"
+import Activities from "@/components/Activities"
+import FeaturedEvent from "@/components/FeaturedEvent"
 
 export default function HomePage() {
   return (
-    <>
-      <Navbar />
-      <main className="p-6 text-center">
-        <h1 className="text-3xl font-bold mb-4">Benvenuti a Drago Verde Ischia</h1>
-        <p className="text-lg">Promuoviamo giochi, creatività e comunità a Ischia.</p>
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-grow">
+        <Hero />
+        <AboutUs />
+        <Activities />
+        <FeaturedEvent />
       </main>
-    </>
+    </div>
   )
 }

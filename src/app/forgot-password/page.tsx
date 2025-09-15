@@ -1,46 +1,46 @@
 "use client"
 import { useState } from "react"
+import { toast } from "@/lib/toast"
 
 export default function ForgotPasswordPage() {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
-  const [message, setMessage] = useState("")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setMessage("")
-    setError("")
-    setLoading(true)
+  e.preventDefault()
+  if (isSubmitting) return // evita doppi invii
 
-    try {
-      const res = await fetch("/api/auth/forgot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email })
-      })
+  setIsSubmitting(true)
+  toast.loading("Invio richiesta...")
 
-      const data = await res.json()
+  try {
+    const res = await fetch("/api/auth/forgot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email }),
+    })
 
-      if (!res.ok) {
-        setError(data.error || "Errore nell'invio della richiesta")
-      } else {
-        setMessage("Se i dati sono corretti, ti abbiamo inviato un'email con le istruzioni per reimpostare la password.")
-      }
-    } catch (err) {
-      setError("Errore di connessione al server")
-    } finally {
-      setLoading(false)
+    const data = await res.json()
+    toast.dismiss()
+
+    if (!res.ok) {
+      toast.error(data.error || "❌ Errore nell'invio della richiesta")
+    } else {
+      toast.success("✅ Se i dati sono corretti, ti abbiamo inviato un'email con il link per reimpostare la password.")
     }
+  } catch (err) {
+    toast.dismiss()
+    toast.error("❌ Errore di connessione al server")
+  } finally {
+    setIsSubmitting(false)
   }
+  }
+
 
   return (
     <div className="p-6 max-w-md mx-auto">
       <h1 className="text-2xl mb-4">Password dimenticata</h1>
-
-      {error && <p className="text-red-600 mb-2">{error}</p>}
-      {message && <p className="text-green-600 mb-2">{message}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -62,13 +62,14 @@ export default function ForgotPasswordPage() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={isSubmitting}
           className={`px-4 py-2 rounded w-full text-white ${
-            loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+            isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
           }`}
         >
-          {loading ? "Invio in corso..." : "Invia link di reset"}
+          {isSubmitting ? "Invio in corso..." : "Invia link di reset"}
         </button>
+
       </form>
     </div>
   )
