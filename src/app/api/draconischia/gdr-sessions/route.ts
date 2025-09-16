@@ -1,4 +1,4 @@
-// src/app/api/draconischia/sessioni-gdr/route.ts
+// src/app/api/draconischia/gdr-sessions/route.ts
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import jwt from "jsonwebtoken"
@@ -9,6 +9,12 @@ export async function GET() {
   try {
     const sessions = await prisma.gdrSession.findMany({
       orderBy: { start: "asc" },
+      include: { 
+        bookings: true,
+        _count: {
+        select: { bookings: true },
+      } 
+      },
     })
     return NextResponse.json(sessions, { status: 200 })
   } catch (err) {

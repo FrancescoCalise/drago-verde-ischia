@@ -1,58 +1,42 @@
 "use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from "react"
-import { setAccessToken, getValidToken } from "@/lib/authToken"
-
-type User = {
-  id: string
-  username: string
-  role: string
-  name?: string
-  surname?: string
-  email?: string
-} | null
-
-type AuthContextType = {
-  user: User | null
-  login: (user: User, token: string) => void
-  logout: () => void
-  getValidToken: () => Promise<string | null>
-}
+import { AppUser, AuthContextType } from "@/interface/AppUser"
+import { setAccessToken, getValidToken } from "@/lib/authToken" // 👈 la tua lib
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AppUser | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  // 🔄 Carica utente da localStorage all’avvio
+  // Carica utente da localStorage all’avvio
   useEffect(() => {
     const savedUser = localStorage.getItem("user")
     if (savedUser) {
       setUser(JSON.parse(savedUser))
     }
+    setLoading(false)
   }, [])
 
-  // 🔑 Login
-  const login = (user: User, token: string) => {
+  const login = (user: AppUser, token: string) => {
     setUser(user)
-    setAccessToken(token)
+    setAccessToken(token) // 👈 usa la lib
     localStorage.setItem("user", JSON.stringify(user))
   }
 
-  // 🚪 Logout
   const logout = () => {
     setUser(null)
-    setAccessToken(null)
+    setAccessToken(null) // 👈 pulisce anche localStorage
     localStorage.removeItem("user")
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, getValidToken }}>
+    <AuthContext.Provider value={{ user, login, logout, getValidToken, loading }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-// Hook per usare il contesto
 export function useAuth() {
   const context = useContext(AuthContext)
   if (!context) {

@@ -1,15 +1,20 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "@/lib/toast"
 import { useModal } from "@/lib/modal"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { it } from "date-fns/locale"
-import { useAuth } from "@/context/AuthContext"
+import { httpFetch } from "@/lib/http"
+import { GdrSession } from "@/interface/GdrSession"
 
-export default function NewSessionForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { getValidToken } = useAuth()
+interface SessionFormProps {
+  onSuccess?: () => void
+  session?: GdrSession // se presente, siamo in modalità "edit"
+}
+
+export default function SessionForm({ onSuccess, session }: SessionFormProps) {
   const { closeModal } = useModal()
   const [form, setForm] = useState<{
   title: string
@@ -19,74 +24,80 @@ export default function NewSessionForm({ onSuccess }: { onSuccess?: () => void }
   end: Date | null
   master: string
   availableSeats: number
-}>({
-  title: "",
-  description: "",
-  urlImg: "",
-  start: null,
-  end: null,
-  master: "",
-  availableSeats: 0,
-})
+  }>({
+    title: "",
+    description: "",
+    urlImg: "",
+    start: null,
+    end: null,
+    master: "",
+    availableSeats: 0,
+  })
+  
+  useEffect(() => {
+    if (session) {
+      setForm({
+        title: session.title,
+        description: session.description,
+        urlImg: session.urlImg,
+        start: session.start ? new Date(session.start) : null,
+        end: session.end ? new Date(session.end) : null,
+        master: session.master,
+        availableSeats: session.availableSeats,
+      })
+    }
+  }, [session])
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  runValidation(form)
+    runValidation(form)
 
-  const token = await getValidToken()
-  if (!token) {
-    toast.error("Non sei autorizzato")
-    return
-  }
-
-  const start = new Date(form.start as Date)
-  const end = new Date(form.end as Date)
-  const availableSeats = Number(form.availableSeats)
-  const payload = {
-    title: form.title.trim(),
-    description: form.description.trim(),
-    urlImg: form.urlImg.trim() || null,
-    start: start.toISOString(),
-    end: end.toISOString(),
-    master: form.master.trim(),
-    availableSeats,
-  }
-
-  toast.loading("Creazione sessione...")
-
-  try {
-    const res = await fetch("/api/draconischia/sessioni-gdr", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: JSON.stringify(payload),
-    })
-
-    toast.dismiss()
-    const data = await res.json().catch(() => ({}))
-
-    if (res.ok) {
-      toast.success("✅ Sessione creata con successo")
-      closeModal()
-      onSuccess?.() 
-    } else {
-      toast.error(data.error || "❌ Errore creazione sessione")
+    const start = new Date(form.start as Date)
+    const end = new Date(form.end as Date)
+    const availableSeats = Number(form.availableSeats)
+    const payload = {
+      title: form.title.trim(),
+      description: form.description.trim(),
+      urlImg: form.urlImg.trim() || null,
+      start: start.toISOString(),
+      end: end.toISOString(),
+      master: form.master.trim(),
+      availableSeats,
     }
-  } catch (err) {
-    toast.dismiss()
-    toast.error((err as Error).message || "❌ Errore creazione sessione")
+
+    toast.loading(session ? "Aggiornamento sessione..." : "Creazione sessione...")
+
+    try {
+      const res = await httpFetch(
+        session ? `/api/draconischia/gdr-sessions/${session.id}` : "/api/draconischia/gdr-sessions",
+        {
+          method: session ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      )
+
+      toast.dismiss()
+      const data = await res.json().catch(() => ({}))
+
+      if (res.ok) {
+        toast.success(session ? "✅ Sessione aggiornata!" : "✅ Sessione creata!")
+        closeModal()
+        onSuccess?.() 
+      } else {
+        toast.error(data.error || "❌ Errore creazione sessione")
+      }
+    } catch (err) {
+      toast.dismiss()
+      toast.error((err as Error).message || "❌ Errore creazione sessione")
+    }
   }
-}
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

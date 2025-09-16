@@ -1,10 +1,38 @@
 /* eslint-disable react/no-unescaped-entities */
+"use client"
 import Link from "next/link"
 import Image from "next/image"
+import { useAuth } from "@/context/AuthContext"
+import { showError } from "@/lib/toast"
+import { useRouter } from "next/navigation"
 
 export default function DraconIschiaPage() {
+  const { user } = useAuth()
+  const router = useRouter()
+
+  const handleManageEvent = () => {
+    if (user?.role === "admin") {
+      router.push("/draconischia/manage-event")
+    } else {
+      showError("❌ Non sei autorizzato")
+      router.push("/draconischia")
+    }
+  }
+
   return (
     <main className="flex flex-col">
+      {/* Gestione Evento (solo admin) */}
+      {user && (
+        <section className="bg-orange-500 text-white py-8 text-center">
+          <button
+            onClick={handleManageEvent}
+            className="bg-white text-orange-600 font-bold px-6 py-3 rounded-lg hover:bg-gray-100"
+          >
+            Gestione Evento
+          </button>
+        </section>
+      )}
+
       {/* Header */}
       <section className="relative w-full h-[50vh] flex items-center justify-center text-center text-white overflow-hidden">
         <Image
@@ -71,7 +99,7 @@ export default function DraconIschiaPage() {
           </div>
           <div className="text-center mt-10">
             <Link
-              href="/draconischia/sessioni-gdr"
+              href="/draconischia/gdr-sessions"
               className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-500"
             >
               Prenota la tua sessione GDR
@@ -80,11 +108,11 @@ export default function DraconIschiaPage() {
         </div>
       </section>
 
-      {/* Tornei */}
+      {/* Main Events */}
       <section className="py-16 max-w-6xl mx-auto px-6">
         <h2 className="text-3xl font-bold text-center mb-8">Metti alla prova le tue abilità!</h2>
         <p className="text-center text-lg mb-10 text-gray-700">
-          I nostri tornei sono a numero chiuso e richiedono una quota di iscrizione.
+          I nostri eventi principali sono a numero chiuso e richiedono una quota di iscrizione.
           Prenota il tuo posto per non perderti l'opportunità di vincere fantastici premi!
         </p>
         <div className="grid md:grid-cols-3 gap-8">
@@ -103,10 +131,10 @@ export default function DraconIschiaPage() {
         </div>
         <div className="text-center mt-10">
           <Link
-            href="/tornei"
+            href="/draconischia/main-events"
             className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-500"
           >
-            Iscriviti ai tornei!
+            Iscriviti ai Main Events!
           </Link>
         </div>
       </section>
