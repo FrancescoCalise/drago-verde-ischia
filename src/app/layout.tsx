@@ -5,6 +5,7 @@ import Footer from "@/components/Footer"
 import { AuthProvider } from "@/context/AuthContext"
 import { Toaster } from "react-hot-toast"
 import { ModalProvider } from "@/components/ui/ModalProvider"
+import GlobalSpinner from "@/components/ui/GolbalSpinner"
 
 export const metadata: Metadata = {
   title: "Drago Verde Ischia A.P.S.",
@@ -43,6 +44,7 @@ export default function RootLayout({
           <Footer />
           </ModalProvider>
         </AuthProvider>
+         <GlobalSpinner />
       </body>
     </html>
   )

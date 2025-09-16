@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useAuth } from "@/context/AuthContext"
 import { getValidToken } from "@/lib/authToken"
+import { hideSpinner, showSpinner } from "./spinner"
 
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
@@ -15,11 +16,11 @@ async function baseRequest<T>(
   method: HttpMethod,
   options: HttpOptions = {}
 ): Promise<T> {
+  showSpinner("Caricamento in corso...")
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(options.headers || {}),
   }
-
   const res = await fetch(url, {
     ...options,
     method,
@@ -33,7 +34,10 @@ async function baseRequest<T>(
     throw new Error(error.error || "Errore nella richiesta")
   }
 
-  return res.json() as Promise<T>
+  return (res.json() as Promise<T>)
+  .finally(() => {
+    hideSpinner()
+  })
 }
 
 export function useHttp() {
@@ -49,6 +53,7 @@ export function useHttp() {
     method: HttpMethod,
     options: HttpOptions = {}
   ): Promise<T> => {
+    showSpinner("Caricamento in corso...")
     let token = await getValidToken()
     if (!token) {
       throw new Error("Non autenticato")
@@ -88,7 +93,10 @@ export function useHttp() {
       throw new Error(error.error || "Errore nella richiesta")
     }
 
-    return res.json() as Promise<T>
+    return (res.json() as Promise<T>)
+    .finally(() => {
+      hideSpinner()
+    })
   }
 
   return {
@@ -115,7 +123,7 @@ export async function httpFetch(
   input: RequestInfo | URL,
   options: RequestInit = {}
 ) {
-
+  showSpinner("Caricamento in corso...")
   const token = await getValidToken()
   if (!token) throw new Error("❌ Token mancante o non valido")
 
@@ -126,6 +134,9 @@ export async function httpFetch(
   }
 
   return fetch(input, { ...options, headers })
+  .finally(() => {
+    hideSpinner()
+  })
 }
 
 // ---- fetch non autenticato ----
@@ -133,10 +144,14 @@ export async function httpFetchPublic(
   input: RequestInfo | URL,
   options: RequestInit = {}
 ) {
+    showSpinner("Caricamento in corso...")
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(options.headers as Record<string, string>),
   }
 
   return fetch(input, { ...options, headers })
+  .finally(() => {
+    hideSpinner()
+  })
 }
