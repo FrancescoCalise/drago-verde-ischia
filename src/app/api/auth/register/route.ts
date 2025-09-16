@@ -10,10 +10,9 @@ export async function POST(req: Request) {
 
     // Hash della password
     const hashedPassword = await hashPassword(password)
-
-    debugger;
+    
     // Creazione utente su Prisma
-    const user = await prisma.user.create({
+    const user = await prisma.appUser.create({
       data: {
         username,
         password: hashedPassword,

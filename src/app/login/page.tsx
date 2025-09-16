@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "@/lib/toast"
+import { httpFetchPublic } from "@/lib/http"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
@@ -17,7 +18,7 @@ export default function LoginPage() {
   toast.loading("Accesso in corso...")
 
   try {
-    const res = await fetch("/api/auth/login", {
+    const res = await httpFetchPublic("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -31,18 +32,20 @@ export default function LoginPage() {
       return
     }
 
-    if (data.token) {
-      // salvo il JWT nel localStorage
-      localStorage.setItem("token", data.token)
+    if (data.accessToken) {
+    // salvo l’accessToken in localStorage
+    localStorage.setItem("accessToken", data.accessToken)
 
-      // aggiorno contesto utente
-      login(data.user, data.token)
+    // aggiorno contesto utente (AuthContext usa useAuthToken)
+    login(data.user, data.accessToken)
 
-      toast.success("✅ Login effettuato con successo!")
+    toast.success("✅ Login effettuato con successo!")
 
-      // redirect alla home
-      router.push("/")
-    }
+    // redirect alla home
+    router.push("/")
+  } else {
+    toast.error("❌ Nessun token ricevuto")
+  }
   } catch (err) {
     toast.dismiss()
     toast.error("❌ Impossibile connettersi al server")

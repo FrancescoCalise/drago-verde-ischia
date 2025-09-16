@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { AuthProvider } from "@/context/AuthContext"
 import { Toaster } from "react-hot-toast"
+import { ModalProvider } from "@/components/ui/ModalProvider"
 
 export const metadata: Metadata = {
   title: "Drago Verde Ischia A.P.S.",
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="it">
       <body className="flex flex-col min-h-screen">
         <AuthProvider>
+          <ModalProvider>
           <Navbar />
           <main className="flex-grow">{children}</main>
           <Toaster
@@ -39,6 +41,7 @@ export default function RootLayout({
           gutter={12}
         />
           <Footer />
+          </ModalProvider>
         </AuthProvider>
       </body>
     </html>

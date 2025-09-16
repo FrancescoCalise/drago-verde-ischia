@@ -9,7 +9,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model User {
+model AppUser {
   id           String    @id @default(uuid()) @db.Uuid
   username     String    @unique
   password     String
@@ -23,19 +23,18 @@ model User {
   updated_at   DateTime? @default(now()) @db.Timestamptz(6)
 }
 
-model GdrSession  {
+model GdrSession {
   id             String   @id @default(uuid())
   title          String
   description    String
-  urlImg         String
-  date           DateTime
-  time           String
+  urlImg         String?
+  start          DateTime
+  end            DateTime
   master         String
   availableSeats Int
-  created_at   DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
 
-  // Relazione con prenotazioni
   bookings       Booking[]
 }
 

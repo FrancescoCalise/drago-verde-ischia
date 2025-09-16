@@ -1,20 +1,16 @@
 import { NextResponse } from "next/server"
-import prisma from "@/lib/prisma"
-import { verifyPassword } from "@/lib/auth"  // bcrypt.compare
+import { prisma } from "@/lib/prisma"
+import { verifyPassword } from "@/lib/auth"
 import jwt from "jsonwebtoken"
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET!
+const REFRESH_SECRET = process.env.REFRESH_SECRET!
 
 export async function POST(req: Request) {
   try {
     const { username, password } = await req.json()
 
-    if (!JWT_SECRET) {
-      throw new Error("JWT_SECRET is not defined in environment variables")
-    }
-
-    // 🔎 Recupero utente da Prisma
-    const user = await prisma.user.findUnique({
+    const user = await prisma.appUser.findUnique({
       where: { username },
     })
 
@@ -22,22 +18,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Utente non trovato" }, { status: 404 })
     }
 
-    // 🔐 Verifica password
     const valid = await verifyPassword(password, user.password)
     if (!valid) {
       return NextResponse.json({ error: "Credenziali non valide" }, { status: 401 })
     }
 
-    // 🎟️ Genera JWT
-    const token = jwt.sign(
+    // genera access e refresh token
+    const accessToken = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       JWT_SECRET,
       { expiresIn: "1h" }
     )
 
-    // 📤 Restituisco al client
-    return NextResponse.json({
-      token,
+    const refreshToken = jwt.sign(
+      { id: user.id, username: user.username },
+      REFRESH_SECRET,
+      { expiresIn: "7d" }
+    )
+
+    // set cookie httpOnly col refresh token
+    const response = NextResponse.json({
+      accessToken,
       user: {
         id: user.id,
         username: user.username,
@@ -47,11 +48,17 @@ export async function POST(req: Request) {
         email: user.email,
       },
     })
-  } catch (err: unknown) {
-    console.error("Errore login:", err)
-    return NextResponse.json(
-      { error: (err as Error).message || "Errore durante il login" },
-      { status: 500 }
-    )
+
+    response.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 giorni
+    })
+
+    return response
+  } catch (err) {
+    console.error("Login error:", err)
+    return NextResponse.json({ error: "Errore durante il login" }, { status: 500 })
   }
 }

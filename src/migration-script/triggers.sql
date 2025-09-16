@@ -9,7 +9,7 @@ $$ language 'plpgsql';
 
 -- Trigger per la tabella user
 create trigger update_user_updated_at
-before update on User
+before update on AppUser
 for each row
 execute function update_updated_at_column();
 

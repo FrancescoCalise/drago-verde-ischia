@@ -1,5 +1,6 @@
 "use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from "react"
+import { setAccessToken, getValidToken } from "@/lib/authToken"
 
 type User = {
   id: string
@@ -11,45 +12,51 @@ type User = {
 } | null
 
 type AuthContextType = {
-  user: User
+  user: User | null
   login: (user: User, token: string) => void
   logout: () => void
+  getValidToken: () => Promise<string | null>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User>(null)
+  const [user, setUser] = useState<User | null>(null)
 
+  // 🔄 Carica utente da localStorage all’avvio
   useEffect(() => {
-    const token = localStorage.getItem("token")
-    const storedUser = localStorage.getItem("user")
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser))
+    const savedUser = localStorage.getItem("user")
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
     }
   }, [])
 
+  // 🔑 Login
   const login = (user: User, token: string) => {
-    localStorage.setItem("token", token)
-    localStorage.setItem("user", JSON.stringify(user))
     setUser(user)
+    setAccessToken(token)
+    localStorage.setItem("user", JSON.stringify(user))
   }
 
+  // 🚪 Logout
   const logout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
     setUser(null)
+    setAccessToken(null)
+    localStorage.removeItem("user")
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, getValidToken }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
+// Hook per usare il contesto
 export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider")
-  return ctx
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error("useAuth deve essere usato dentro AuthProvider")
+  }
+  return context
 }

@@ -6,6 +6,7 @@ import { format } from "date-fns"
 import { it } from "date-fns/locale"
 import "react-datepicker/dist/react-datepicker.css"
 import { toast } from "@/lib/toast"
+import { httpFetchPublic } from "@/lib/http"
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -97,14 +98,13 @@ export default function RegisterPage() {
     toast.loading("Registrazione in corso...")
 
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          birthdate: formatForDB(form.birthdate)
-        })
-      })
+      const res = await httpFetchPublic("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        ...form,
+        birthdate: formatForDB(form.birthdate),
+      }),
+    })
 
       toast.dismiss()
       const data = await res.json()
