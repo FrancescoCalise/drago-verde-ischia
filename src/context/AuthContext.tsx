@@ -1,7 +1,7 @@
 "use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from "react"
 import { AppUser, AuthContextType } from "@/interface/AppUser"
-import { setAccessToken, getValidToken } from "@/lib/authToken" // 👈 la tua lib
+import { setAccessToken, getValidToken } from "@/lib/authToken" 
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -20,13 +20,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = (user: AppUser, token: string) => {
     setUser(user)
-    setAccessToken(token) // 👈 usa la lib
+    setAccessToken(token)
     localStorage.setItem("user", JSON.stringify(user))
   }
 
   const logout = () => {
     setUser(null)
-    setAccessToken(null) // 👈 pulisce anche localStorage
+    setAccessToken(null)
     localStorage.removeItem("user")
   }
 

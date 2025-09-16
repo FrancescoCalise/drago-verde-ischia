@@ -12,7 +12,7 @@ import { GdrSession } from "@/interface/GdrSession"
 import { MainEvent } from "@/interface/MainEvent"
 
 export default function ManageEventPage() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const { openModal } = useModal()
 
@@ -22,6 +22,9 @@ export default function ManageEventPage() {
 
   // Solo admin
   useEffect(() => {
+    
+    if (authLoading) return;
+
     if (!user) {
       showInfo("Effettua il login per accedere")
       router.push("/login")
@@ -31,7 +34,7 @@ export default function ManageEventPage() {
     } else {
       fetchData()
     }
-  }, [router, user])
+  }, [authLoading, user, router])
 
   const fetchData = async () => {
     try {
@@ -75,7 +78,7 @@ export default function ManageEventPage() {
     <main className="max-w-6xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-bold mb-8">Gestione Evento</h1>
 
-      {loading ? (
+      {authLoading || loading ? (
         <p>Caricamento dati...</p>
       ) : (
         <>
