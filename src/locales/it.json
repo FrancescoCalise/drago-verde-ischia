@@ -1,12 +1,22 @@
 {
-  "login.title": "Accedi",
-  "login.username": "Nome utente",
-  "login.password": "Password",
-  "login.submit": "Entra",
-  "register.title": "Registrati",
-
-  "manageEventPage.addSession": "Aggiungi Sessione",
-  "manageEventPage.editSession": "Modifica Sessione",
-  "manageEventPage.addMainEvent": "Aggiungi Main Event",
-  "manageEventPage.editMainEvent": "Modifica Main Event"
+  "login": {
+    "title": "Accedi",
+    "username": "Nome utente",
+    "password": "Password",
+    "submit": "Entra"
+  },
+  "register": {
+    "username": "Nome utente",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Conferma Password",
+    "submit": "Crea Account",
+    "title": "Registrati"
+  },
+  "manageEventPage": {
+    "addSession": "Aggiungi Sessione",
+    "editSession": "Modifica Sessione",
+    "addMainEvent": "Aggiungi Main Event",
+    "editMainEvent": "Modifica Main Event"
+  }
 }

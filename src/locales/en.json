@@ -1,7 +1,22 @@
 {
-  "login.title": "Login",
-  "login.username": "Username",
-  "login.password": "Password",
-  "login.submit": "Submit",
-  "register.title": "Register"
+  "login": {
+    "title": "Accedi",
+    "username": "Nome utente",
+    "password": "Password",
+    "submit": "Entra"
+  },
+  "register": {
+    "username": "Nome utente",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Conferma Password",
+    "submit": "Crea Account",
+    "title": "Registrati"
+  },
+  "manageEventPage": {
+    "addSession": "Create Session",
+    "editSession": "Edit Session",
+    "addMainEvent": "Add Main Event",
+    "editMainEvent": "Edit Main Event"
+  }
 }

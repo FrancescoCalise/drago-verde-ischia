@@ -9,12 +9,12 @@ import { UserRole } from "@/interfaces/UserRole"
 import { useTranslation } from "react-i18next"
 
 const flags: Record<string, string> = {
-  it: "🇮🇹",
-  en: "🇬🇧",
-  fr: "🇫🇷",
-  es: "🇪🇸",
-  de: "🇩🇪",
-  cimode: "CM", // debug mode
+  it: "IT",
+  en: "EN",
+  fr: "FR",
+  es: "ES",
+  de: "DE",
+  cimode: "DEBUG", // debug mode
 }
 
 export function LanguageSwitcher() {

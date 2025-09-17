@@ -7,6 +7,7 @@ export function T({ idml, defaultText }: { idml: string; defaultText?: string })
   const { t, i18n } = useTranslation()
 
   useEffect(() => {
+    console.log("i18n language:", i18n.language, "initialized:", i18n.isInitialized, idml, defaultText);
     if (i18n.isInitialized && i18n.options?.saveMissing) {
       const translated = t(idml, { defaultValue: defaultText ?? idml })
       if (!translated || translated === idml) {

@@ -22,6 +22,7 @@ export default function MainEventForm({ event, onSuccess }: Props) {
     description: "",
     start: null,
     end: null,
+    urlImg: "",
     location: "",
     price: 0,
     maxSeats: 0,
@@ -82,7 +83,7 @@ export default function MainEventForm({ event, onSuccess }: Props) {
       }
     } catch (err) {
       toast.dismiss()
-      toast.error("❌ Errore connessione server")
+      toast.error(err instanceof Error ? err.message : "❌ Errore salvataggio evento")
     }
   }
 
