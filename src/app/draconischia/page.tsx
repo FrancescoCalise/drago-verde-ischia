@@ -3,7 +3,6 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useAuth } from "@/context/AuthContext"
-import { showError } from "@/lib/toast"
 import { useRouter } from "next/navigation"
 
 export default function DraconIschiaPage() {
@@ -11,12 +10,7 @@ export default function DraconIschiaPage() {
   const router = useRouter()
 
   const handleManageEvent = () => {
-    if (user?.role === "admin") {
-      router.push("/draconischia/manage-event")
-    } else {
-      showError("❌ Non sei autorizzato")
-      router.push("/draconischia")
-    }
+    router.push("/draconischia/manage-event")
   }
 
   return (

@@ -12,6 +12,11 @@ export async function POST(req: Request) {
 
     const user = await prisma.appUser.findUnique({
       where: { username },
+      include: {
+        GdrSessionRegistrations: { include: { session: true } },
+        mainEventRegistrations: { include: { event: true } }
+      }
+
     })
 
     if (!user) {

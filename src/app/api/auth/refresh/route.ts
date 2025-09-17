@@ -8,7 +8,7 @@ const REFRESH_SECRET = process.env.REFRESH_SECRET!
 
 export async function POST(req: Request) {
   try {
-    // 👉 leggo i cookie
+    // leggo i cookie
     const cookieHeader = req.headers.get("cookie")
     const cookies: Record<string, string> = {}
     cookieHeader?.split(";").forEach((cookie) => {
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Refresh token mancante" }, { status: 401 })
     }
 
-    // 👉 verifico refresh token
+    // verifico refresh token
     let payload: any
     try {
       payload = jwt.verify(refreshToken, REFRESH_SECRET)
@@ -29,15 +29,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Refresh token non valido" }, { status: 403 })
     }
 
-    // 👉 recupero utente dal DB
+    // recupero utente dal DB
     const user = await prisma.appUser.findUnique({
       where: { id: payload.id },
+      include: {
+        GdrSessionRegistrations: { include: { session: true } },
+        mainEventRegistrations: { include: { event: true } }
+      }
     })
     if (!user) {
       return NextResponse.json({ error: "Utente non trovato" }, { status: 404 })
     }
 
-    // 👉 creo nuovo access token
+    // creo nuovo access token
     const accessToken = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       JWT_SECRET,

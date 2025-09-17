@@ -1,0 +1,12 @@
+{
+  "login.title": "Accedi",
+  "login.username": "Nome utente",
+  "login.password": "Password",
+  "login.submit": "Entra",
+  "register.title": "Registrati",
+
+  "manageEventPage.addSession": "Aggiungi Sessione",
+  "manageEventPage.editSession": "Modifica Sessione",
+  "manageEventPage.addMainEvent": "Aggiungi Main Event",
+  "manageEventPage.editMainEvent": "Modifica Main Event"
+}

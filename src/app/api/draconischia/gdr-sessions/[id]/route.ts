@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { requireAuth } from "@/lib/authMiddleware"
+import { UserRole } from "@/interfaces/UserRole"
 
 export const runtime = "nodejs"
 
@@ -10,8 +11,8 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { user, error } = await requireAuth(req, ["admin"])
-    if (error) return error
+    const auth = await requireAuth(req, [UserRole.ADMIN])
+    if (!auth.ok) return auth.response;
 
     const { id } = await context.params
     const body = await req.json()
@@ -42,7 +43,6 @@ export async function PUT(
         end: endDt,
         master: String(master).trim(),
         availableSeats: seats,
-        updated_at: new Date(),
       },
     })
 
@@ -53,14 +53,14 @@ export async function PUT(
   }
 }
 
-// 🗑 Delete Session (DELETE)
+// Delete Session (DELETE)
 export async function DELETE(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { user, error } = await requireAuth(req, ["admin"])
-    if (error) return error
+    const auth = await requireAuth(req, [UserRole.ADMIN])
+    if (!auth.ok) return auth.response;
 
     const { id } = await context.params
 

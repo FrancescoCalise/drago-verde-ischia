@@ -19,18 +19,13 @@ BEFORE UPDATE ON GdrSession
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
--- Trigger per la tabella bookings
-CREATE TRIGGER set_bookings_updated_at
-BEFORE UPDATE ON Booking
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER set_mainEvent_updated_at
 BEFORE UPDATE ON MainEvent
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER set_event_registration_updated_at
-BEFORE UPDATE ON EventRegistration
+CREATE TRIGGER set_newsArticle_updated_at
+BEFORE UPDATE ON NewsArticle
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();

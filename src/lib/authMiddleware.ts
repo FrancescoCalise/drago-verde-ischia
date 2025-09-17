@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server"
 import jwt from "jsonwebtoken"
 
@@ -16,21 +17,20 @@ export type DecodedUser = {
 export async function requireAuth(req: Request, roles?: string[]) {
   const auth = req.headers.get("authorization") || ""
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null
-  console.log(req.headers);
-  console.log(token);
+
   if (!token) {
-    return { error: NextResponse.json({ error: "Non autorizzato" }, { status: 401 }) }
+    return { ok: false, response: NextResponse.json({ error: "Non autorizzato" }, { status: 401 }) }
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as DecodedUser
 
     if (roles && !roles.includes(decoded.role || "")) {
-      return { error: NextResponse.json({ error: "Permesso negato" }, { status: 403 }) }
+      return { ok: false, response: NextResponse.json({ error: "Permesso negato" }, { status: 403 }) }
     }
 
-    return { user: decoded }
-  } catch (err) {
-    return { error: NextResponse.json({ error: "Token non valido" }, { status: 401 }) }
+    return { ok: true, user: decoded }
+  } catch (err: any) {
+    return { ok: false, response: NextResponse.json({ error: err.message }, { status: 401 }) }
   }
 }

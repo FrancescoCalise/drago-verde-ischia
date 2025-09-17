@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { it } from "date-fns/locale"
 import { httpFetch } from "@/lib/http"
-import { GdrSession } from "@/interface/GdrSession"
+import { GdrSession } from "@/interfaces/GdrSession"
 
 interface SessionFormProps {
   onSuccess?: () => void
@@ -166,12 +166,13 @@ export default function SessionForm({ onSuccess, session }: SessionFormProps) {
         required
       />
 
-      <button
-        type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-      >
-        Salva
-      </button>
+      <div className="flex justify-center gap-2">
+        <button  type="submit"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+        >
+          Salva
+        </button>
+      </div>
     </form>
   )
 }

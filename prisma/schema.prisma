@@ -21,10 +21,15 @@ model AppUser {
   phone_number String?
   created_at   DateTime? @default(now()) @db.Timestamptz(6)
   updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+
+  // Relazioni
+  newsArticles  NewsArticle[]
+  GdrSessionRegistrations  GdrSessionRegistration[]
+  mainEventRegistrations MainEventRegistration[]
 }
 
 model GdrSession {
-  id             String   @id @default(uuid())
+  id             String @id @default(uuid()) @db.Uuid
   title          String
   description    String
   urlImg         String?
@@ -35,45 +40,49 @@ model GdrSession {
   created_at     DateTime? @default(now()) @db.Timestamptz(6)
   updated_at     DateTime? @default(now()) @db.Timestamptz(6)
 
-  bookings       Booking[]
+  gdrSessionRegistrations  GdrSessionRegistration[]
 }
 
 
-model Booking {
-  id        String      @id @default(uuid())
-  session   GdrSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sessionId String
+model GdrSessionRegistration {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  sessionId String   @db.Uuid
+  createdAt DateTime @default(now())
 
-  userId    String      // solo l'id dell'utente
-  created_at DateTime?  @default(now()) @db.Timestamptz(6)
-  updated_at DateTime?  @default(now()) @db.Timestamptz(6)
+  user    AppUser    @relation(fields: [userId], references: [id])
+  session GdrSession @relation(fields: [sessionId], references: [id])
+
+  @@unique([userId, sessionId])
 }
 
 model MainEvent {
-  id           String    @id @default(uuid())
+  id           String @id @default(uuid()) @db.Uuid
   title        String
   description  String
   urlImg       String?
   start        DateTime
   end          DateTime
   location     String
-  price        Float     @default(0) // costo di iscrizione, 0 se gratis
+  price        Float     @default(0)
   maxSeats     Int
   created_at   DateTime? @default(now()) @db.Timestamptz(6)
   updated_at   DateTime? @default(now()) @db.Timestamptz(6)
-  note       String
-  
-  // Relazione con iscrizioni
-  registrations EventRegistration[]
+  note         String
+
+  mainEventRegistrations MainEventRegistration[]
 }
 
-model EventRegistration {
-  id         String    @id @default(uuid())
-  eventId    String
-  userId     String
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
+model MainEventRegistration {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  eventId   String   @db.Uuid
+  createdAt DateTime @default(now())
 
-  event MainEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  AppUser   @relation(fields: [userId], references: [id])
+  event MainEvent @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
 }
 
 model LoggerIDML {
@@ -82,6 +91,33 @@ model LoggerIDML {
     description String
     language String
     created_at DateTime?  @default(now()) @db.Timestamptz(6)
-    updated_at DateTime?  @default(now()) @db.Timestamptz(6)
-    @@unique([IDML, language], name: "IDML_language")
+    @@unique([IDML, language])
+}
+
+model NewsArticle {
+  id          String     @id @default(uuid()) @db.Uuid
+  title       String
+  content     String     @db.Text
+  imageUrl    String?
+  publishedAt DateTime   @default(now())
+
+  likes       NewsLike[]
+  shares      Int        @default(0)
+
+  authorId String   @db.Uuid
+  author   AppUser  @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NewsLike {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  articleId String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  article NewsArticle @relation(fields: [articleId], references: [id])
+
+  @@unique([userId, articleId])
 }

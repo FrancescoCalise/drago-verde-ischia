@@ -1,4 +1,4 @@
-import { Registration } from "./Registrations"
+import { MainEventRegistration } from "./MainEventRegistration"
 
 export interface MainEvent {
   id?: string
@@ -11,6 +11,6 @@ export interface MainEvent {
   price: number
   maxSeats: number
   note?: string
-  registrations?: Registration[]
-  _count?: { registrations: number } // conteggio registrazioni
+  mainEventRegistrations?: MainEventRegistration[]
+  _count?: { mainEventRegistrations: number } // conteggio registrazioni
 }

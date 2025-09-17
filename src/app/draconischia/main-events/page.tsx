@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 import { useAuth } from "@/context/AuthContext"
 import { showError, showSuccess, showInfo } from "@/lib/toast"
 import { httpFetch } from "@/lib/http"
-import { MainEvent } from "@/interface/MainEvent"
+import { MainEvent } from "@/interfaces/MainEvent"
+import { getOnlyDate, getOnlyTime } from "@/lib/manageDataUtils"
 
 export default function MainEventPage() {
   const [events, setEvents] = useState<MainEvent[]>([])
@@ -59,23 +60,13 @@ export default function MainEventPage() {
           <p className="text-gray-600 text-center">Nessun main event disponibile al momento.</p>
         ) : (
           events.map((e) => {
-            const date = new Date(e.date).toLocaleDateString("it-IT", {
-              weekday: "long",
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })
-            const start = new Date(e.startTime).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-            const end = new Date(e.endTime).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
 
-            const postiDisponibili = e.maxSeats - e.registrations.length
-            const isRegistered = !!e.registrations.find((r) => r.userId === user?.id)
+            const date = getOnlyDate(e.start as Date)
+            const start = getOnlyTime(e.start as Date)
+            const end = getOnlyTime(e.end as Date)
+
+            const postiDisponibili = e.maxSeats - (e.mainEventRegistrations?.length ?? 0)
+            const isRegistered = !!e.mainEventRegistrations?.find((r) => r.userId === user?.id)
 
             return (
               <div key={e.id} className="bg-white shadow rounded-lg p-6">
@@ -95,14 +86,14 @@ export default function MainEventPage() {
 
                 {isRegistered ? (
                   <button
-                    onClick={() => handleUnregister(e.id)}
+                    onClick={() => e.id && handleUnregister(e.id)}
                     className="mt-4 w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
                   >
                     ❌ Cancella Iscrizione
                   </button>
                 ) : (
                   <button
-                    onClick={() => handleRegister(e.id)}
+                    onClick={() => e.id && handleRegister(e.id)}
                     disabled={postiDisponibili <= 0}
                     className={`mt-4 w-full px-4 py-2 rounded-lg ${
                       postiDisponibili <= 0

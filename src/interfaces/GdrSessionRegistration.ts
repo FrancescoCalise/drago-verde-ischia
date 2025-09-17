@@ -1,8 +1,8 @@
-export interface Registration {
+export interface GdrSessionRegistration {
   id: string
   userId: string
   user?: { username: string; email: string }
-  mainEventId: string
+  sessionId: string
   created_at: string
   updated_at: string
 }

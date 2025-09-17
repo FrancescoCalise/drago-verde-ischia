@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAuth } from "@/lib/authMiddleware"
+import { MainEvent } from "@/generated/prisma"
+import { UserRole } from "@/interfaces/UserRole"
 
-// 📌 Lista eventi
+// Lista eventi
 export async function GET() {
   try {
     const events = await prisma.mainEvent.findMany({
-      include: { registrations: true, _count: { select: { registrations: true } } },
-      orderBy: { date: "asc" },
+      include: { mainEventRegistrations: true, _count: { select: { mainEventRegistrations: true } } },
+      orderBy: { start: "asc" },
     })
     return NextResponse.json(events)
   } catch (err) {
@@ -17,31 +19,19 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { user, error } = await requireAuth(req)
-  if (error) return error
-  if (user?.role !== "admin") {
-    return NextResponse.json({ error: "Non autorizzato" }, { status: 403 })
-  }
-
+  const auth = await requireAuth(req, [UserRole.ADMIN])
+  if (!auth.ok) return auth.response;
+  
   try {
     const body = await req.json()
-    const { title, description, date, availableSeats, startTime, endTime, location, note } = body
+    const mainEventSchema : MainEvent = body;
 
-    if (!title || !description || !date || !startTime || !endTime || !location || !note) {
+    if (!mainEventSchema.title || !mainEventSchema.description || !mainEventSchema.start || !mainEventSchema.end || !mainEventSchema.location || !mainEventSchema.note) {
       return NextResponse.json({ error: "Campi obbligatori mancanti" }, { status: 400 })
     }
 
     const created = await prisma.mainEvent.create({
-      data: {
-        title: String(title).trim(),
-        description: String(description).trim(),
-        date: new Date(date),
-        maxSeats: Number(availableSeats) || 0,
-        startTime: String(startTime).trim(),
-        endTime: String(endTime).trim(),
-        location: String(location).trim(),
-        note: String(note).trim(),
-      },
+      data: mainEventSchema,
     })
 
     return NextResponse.json(created, { status: 201 })

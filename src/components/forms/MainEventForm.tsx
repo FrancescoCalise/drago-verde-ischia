@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { toast } from "@/lib/toast"
 import { httpFetch } from "@/lib/http"
 import { useModal } from "@/lib/modal"
-import { MainEvent } from "@/interface/MainEvent"
+import { MainEvent } from "@/interfaces/MainEvent"
 import DatePicker from "react-datepicker"
 import { it } from "date-fns/locale"
 import "react-datepicker/dist/react-datepicker.css"
@@ -21,7 +21,7 @@ export default function MainEventForm({ event, onSuccess }: Props) {
     title: "",
     description: "",
     start: null,
-    end:  null,
+    end: null,
     location: "",
     price: 0,
     maxSeats: 0,
@@ -34,8 +34,8 @@ export default function MainEventForm({ event, onSuccess }: Props) {
         title: event.title,
         description: event.description,
         urlImg: event.urlImg,
-        start: event.start ? event.start : null,
-        end: event.end ? event.end : null,
+        start: event.start,
+        end: event.end,
         location: event.location || "",
         price: event.price || 0,
         maxSeats: event.maxSeats || 0,
@@ -88,10 +88,7 @@ export default function MainEventForm({ event, onSuccess }: Props) {
 
   return (
   <form onSubmit={handleSubmit} className="space-y-4">
-    <h2 className="text-xl font-bold mb-2">
-      {event ? "Modifica Evento" : "Nuovo Evento"}
-    </h2>
-
+    
     <input
       name="title"
       placeholder="Titolo"
@@ -110,10 +107,19 @@ export default function MainEventForm({ event, onSuccess }: Props) {
       required
     />
 
+    <input
+        type="url"
+        name="urlImg"
+        placeholder="URL immagine"
+        value={form.urlImg}
+        onChange={handleChange}
+        className="border w-full p-2 rounded"
+    />
+    
     {/* DatePicker Inizio */}
     <DatePicker
       selected={form.start}
-      onChange={(date) => setForm((prev) => ({ ...prev, startDate: date }))}
+      onChange={(date) => setForm((prev) => ({ ...prev, start: date }))}
       showTimeSelect
       timeFormat="HH:mm"
       timeIntervals={30}
@@ -126,7 +132,7 @@ export default function MainEventForm({ event, onSuccess }: Props) {
     {/* DatePicker Fine */}
     <DatePicker
       selected={form.end}
-      onChange={(date) => setForm((prev) => ({ ...prev, endDate: date }))}
+      onChange={(date) => setForm((prev) => ({ ...prev, end: date }))}
       showTimeSelect
       timeFormat="HH:mm"
       timeIntervals={30}
@@ -175,19 +181,12 @@ export default function MainEventForm({ event, onSuccess }: Props) {
       className="border w-full p-2 rounded"
     />
 
-    <div className="flex justify-end gap-2">
-      <button
-        type="button"
-        onClick={closeModal}
-        className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
-      >
-        Annulla
-      </button>
-      <button
-        type="submit"
+    <div className="flex justify-center gap-2">
+      
+      <button  type="submit"
         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
       >
-        {event ? "Salva Modifiche" : "Crea Evento"}
+        Salva
       </button>
     </div>
   </form>

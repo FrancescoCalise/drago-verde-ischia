@@ -1,18 +1,18 @@
 // src/app/api/draconischia/gdr-sessions/route.ts
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
-import jwt from "jsonwebtoken"
+import {  requireAuth } from "@/lib/authMiddleware"
+import { UserRole } from "@/interfaces/UserRole"
 export const runtime = "nodejs"
-const JWT_SECRET = process.env.JWT_SECRET!
 
 export async function GET() {
   try {
     const sessions = await prisma.gdrSession.findMany({
       orderBy: { start: "asc" },
       include: { 
-        bookings: true,
+        gdrSessionRegistrations: true,
         _count: {
-        select: { bookings: true },
+        select: { gdrSessionRegistrations: true },
       } 
       },
     })
@@ -25,16 +25,9 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    // Autorizzazione (admin)
-    const auth = req.headers.get("authorization") || ""
-    const token = auth.startsWith("Bearer ") ? auth.slice(7) : null
-    if (!token || !JWT_SECRET) {
-      return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
-    }
-    const decoded = jwt.verify(token, JWT_SECRET) as { role?: string }
-    if (decoded.role !== "admin") {
-      return NextResponse.json({ error: "Permesso negato" }, { status: 403 })
-    }
+    const auth = await requireAuth(req, [UserRole.ADMIN])
+
+    if (!auth.ok) return auth.response;
 
     const body = await req.json()
     const { title, description, urlImg, start, end, master, availableSeats } = body
