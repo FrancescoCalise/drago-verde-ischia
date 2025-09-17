@@ -53,9 +53,9 @@ model MainEvent {
   id           String    @id @default(uuid())
   title        String
   description  String
-  date         DateTime
-  startTime    DateTime
-  endTime      DateTime
+  urlImg       String?
+  start        DateTime
+  end          DateTime
   location     String
   price        Float     @default(0) // costo di iscrizione, 0 se gratis
   maxSeats     Int
@@ -74,4 +74,14 @@ model EventRegistration {
   created_at DateTime? @default(now()) @db.Timestamptz(6)
 
   event MainEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model LoggerIDML {
+    id         String    @id @default(uuid())
+    IDML       String
+    description String
+    language String
+    created_at DateTime?  @default(now()) @db.Timestamptz(6)
+    updated_at DateTime?  @default(now()) @db.Timestamptz(6)
+    @@unique([IDML, language], name: "IDML_language")
 }

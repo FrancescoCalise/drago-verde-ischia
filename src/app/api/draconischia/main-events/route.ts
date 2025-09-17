@@ -16,7 +16,6 @@ export async function GET() {
   }
 }
 
-// 📌 Crea nuovo evento
 export async function POST(req: Request) {
   const { user, error } = await requireAuth(req)
   if (error) return error

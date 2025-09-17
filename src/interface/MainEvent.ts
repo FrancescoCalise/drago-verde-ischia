@@ -1,15 +1,16 @@
 import { Registration } from "./Registrations"
 
 export interface MainEvent {
-  id: string
+  id?: string
   title: string
+  urlImg?: string
   description: string
-  date: string
-  startTime: string
-  endTime: string
+  start: Date | null
+  end: Date | null
   location: string
   price: number
   maxSeats: number
-  registrations: Registration[]
-  _count: { registrations: number } // conteggio registrazioni
+  note?: string
+  registrations?: Registration[]
+  _count?: { registrations: number } // conteggio registrazioni
 }

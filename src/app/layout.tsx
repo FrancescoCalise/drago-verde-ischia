@@ -22,29 +22,29 @@ export default function RootLayout({
       <body className="flex flex-col min-h-screen">
         <AuthProvider>
           <ModalProvider>
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Toaster
-          position="bottom-center"
-          toastOptions={{
-            style: {
-              borderRadius: "12px",
-              padding: "12px 16px",
-              fontSize: "14px",
-              fontWeight: 500,
-            },
-            // Durata default
-            duration: 4000,
-          }}
-          containerStyle={{
-            bottom: 20,
-          }}
-          gutter={12}
-        />
-          <Footer />
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                style: {
+                  borderRadius: "12px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                },
+                // Durata default
+                duration: 4000,
+              }}
+              containerStyle={{
+                bottom: 20,
+              }}
+              gutter={12}
+            />
+            <Footer />
+          <GlobalSpinner />
           </ModalProvider>
         </AuthProvider>
-         <GlobalSpinner />
       </body>
     </html>
   )

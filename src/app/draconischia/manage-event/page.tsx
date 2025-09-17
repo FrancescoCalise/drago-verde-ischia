@@ -18,7 +18,6 @@ export default function ManageEventPage() {
 
   const [sessions, setSessions] = useState<GdrSession[]>([])
   const [events, setEvents] = useState<MainEvent[]>([])
-  const [loading, setLoading] = useState(true)
 
   // Solo admin
   useEffect(() => {
@@ -48,12 +47,15 @@ export default function ManageEventPage() {
       setEvents(eData)
     } catch (err) {
       showError((err as Error).message || "Errore nel caricamento dei dati")
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleDelete = async (id: string, type: "session" | "event") => {
+    if(id === undefined || id === null) {
+      showError(`${type === "session" ? "Sessione" : "Evento"} non trovato`)
+      return;
+    }
+
     try {
       const url =
         type === "session"
@@ -77,14 +79,14 @@ export default function ManageEventPage() {
   return (
     <main className="max-w-6xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-bold mb-8">Gestione Evento</h1>
-      
+
       {/* Sessioni GDR */}
       <section className="mb-12">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">Sessioni GDR</h2>
           <button
             onClick={() =>
-              openModal(SessionForm, { onSuccess: () => fetchData() })
+              openModal(SessionForm, "manageEventPage.addSession", "Nuova Sessione", { onSuccess: () => fetchData() })
             }
             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
           >
@@ -97,14 +99,23 @@ export default function ManageEventPage() {
           <div className="space-y-4">
             {
               sessions.map((s) => {
-                const startDate = new Date(s.start)
-                const endDate = new Date(s.end)
-                const formatDate = (date: Date) => {
-                  return date.toLocaleDateString("it-IT", {
+                const startDate = s.start as Date
+                const endDate = s.end as Date
+                const getOnlyDate = (date: Date) => {
+                  if(date === null) return "";
+                  console.log(date)
+                  return new Date(date).toLocaleDateString("it-IT", {
                     weekday: "long",
                     day: "2-digit",
                     month: "long",
                     year: "numeric",
+                  }).replace(/\b\w/g, c => c.toUpperCase())
+                }
+                const getOnlyTime = (date: Date) => {
+                  if(date === null) return "";
+                  return new Date(date).toLocaleTimeString("it-IT", {
+                    hour: "2-digit",
+                    minute: "2-digit",
                   }).replace(/\b\w/g, c => c.toUpperCase())
                 }
                 return (
@@ -114,21 +125,16 @@ export default function ManageEventPage() {
                 >
                   <div>
                     <h3 className="font-bold">{s.title}</h3>
-                    <p className="text-sm">📅 {formatDate(startDate)}</p>
-                    <p className="text-sm">
-                      ⏰{" "}
-                      {startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })} -{" "}
-                      {endDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })}
-                    </p>
+                    <p className="text-sm">📅 {getOnlyDate(startDate)}</p>
+                    <p className="text-sm">⏰ {getOnlyTime(startDate)} - {getOnlyTime(endDate)}</p>
                     <p>
-                      Posti: {s.availableSeats - s.bookings.length}/
-                      {s.availableSeats}
+                      Posti: {s.availableSeats - (s.bookings?.length ?? 0)}/ {s.availableSeats}
                     </p>
                     <p className="text-sm">🎲 Master: {s.master}</p>
 
                     <p>
                       Iscritti:{" "}
-                      {s.bookings.map((b) => b.user?.username).join(", ") ||
+                      {s.bookings?.map((b) => b.user?.username).join(", ") ||
                         "Nessuno"}
                     </p>
                   </div>
@@ -136,7 +142,7 @@ export default function ManageEventPage() {
                     <button
                       className="bg-yellow-500 text-white px-3 py-1 rounded"
                       onClick={() =>
-                        openModal(SessionForm, {
+                        openModal(SessionForm, "manageEventPage.editSession", "Modifica Sessione", {
                           session: s,
                           onSuccess: () => fetchData(),
                         })
@@ -146,7 +152,7 @@ export default function ManageEventPage() {
                     </button>
                     <button
                       className="bg-red-600 text-white px-3 py-1 rounded"
-                      onClick={() => handleDelete(s.id, "session")}
+                      onClick={() => s.id && handleDelete(s.id, "session")}
                     >
                       🗑️ Delete
                     </button>
@@ -165,7 +171,7 @@ export default function ManageEventPage() {
           <h2 className="text-2xl font-semibold">Main Events (Tornei)</h2>
           <button
             onClick={() =>
-              openModal(MainEventForm, { onSuccess: () => fetchData() })
+              openModal(MainEventForm,"manageEventPage.addMainEvent" ,"Nuovo Main Event", { onSuccess: () => fetchData() })
             }
             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
           >
@@ -183,14 +189,13 @@ export default function ManageEventPage() {
               >
                 <div>
                   <h3 className="font-bold">{e.title}</h3>
-                  <p>📅 {new Date(e.date).toLocaleDateString()}</p>
+                  <p>📅 {(e.start as Date).toLocaleDateString()} - {(e.end as Date).toLocaleDateString()}</p>
                   <p>
-                    Posti: {e.maxSeats - e.registrations.length}/
-                    {e.maxSeats}
+                    Posti: {e.maxSeats - (e.registrations?.length ?? 0)}/ {e.maxSeats}
                   </p>
                   <p>
                     Iscritti:{" "}
-                    {e.registrations.map((r) => r.user?.username).join(", ") ||
+                    {e.registrations?.map((r) => r.user?.username).join(", ") ||
                       "Nessuno"}
                   </p>
                 </div>
@@ -198,7 +203,7 @@ export default function ManageEventPage() {
                   <button
                     className="bg-yellow-500 text-white px-3 py-1 rounded"
                     onClick={() =>
-                      openModal(MainEventForm, {
+                      openModal(MainEventForm, "manageEventPage.editMainEvent", "Modifica Main Event", {
                         event: e,
                         onSuccess: () => fetchData(),
                       })
@@ -208,7 +213,7 @@ export default function ManageEventPage() {
                   </button>
                   <button
                     className="bg-red-600 text-white px-3 py-1 rounded"
-                    onClick={() => handleDelete(e.id, "event")}
+                    onClick={() => e.id && handleDelete(e.id, "event")}
                   >
                     🗑️ Delete
                   </button>
@@ -218,8 +223,6 @@ export default function ManageEventPage() {
           </div>
         )}
       </section>
-       
-      
     </main>
   )
 }

@@ -16,15 +16,7 @@ interface SessionFormProps {
 
 export default function SessionForm({ onSuccess, session }: SessionFormProps) {
   const { closeModal } = useModal()
-  const [form, setForm] = useState<{
-  title: string
-  description: string
-  urlImg: string
-  start: Date | null
-  end: Date | null
-  master: string
-  availableSeats: number
-  }>({
+  const [form, setForm] = useState<GdrSession>({
     title: "",
     description: "",
     urlImg: "",
@@ -65,8 +57,8 @@ export default function SessionForm({ onSuccess, session }: SessionFormProps) {
       title: form.title.trim(),
       description: form.description.trim(),
       urlImg: form.urlImg.trim() || null,
-      start: start.toISOString(),
-      end: end.toISOString(),
+      start: start,
+      end: end,
       master: form.master.trim(),
       availableSeats,
     }
