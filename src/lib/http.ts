@@ -123,7 +123,7 @@ export async function httpFetch(
   input: RequestInfo | URL,
   options: RequestInit = {}
 ) {
-  showSpinner("Caricamento in corso...")
+  showSpinner()
   const token = await getValidToken()
   if (!token) throw new Error("❌ Token mancante o non valido")
 
@@ -144,12 +144,17 @@ export async function httpFetchPublic(
   input: RequestInfo | URL,
   options: RequestInit = {}
 ) {
-    showSpinner("Caricamento in corso...")
+  showSpinner()
+  const token = await getValidToken()
+
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(options.headers as Record<string, string>),
   }
-
+  
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  }
   return fetch(input, { ...options, headers })
   .finally(() => {
     hideSpinner()

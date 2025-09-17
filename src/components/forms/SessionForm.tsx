@@ -63,8 +63,6 @@ export default function SessionForm({ onSuccess, session }: SessionFormProps) {
       availableSeats,
     }
 
-    toast.loading(session ? "Aggiornamento sessione..." : "Creazione sessione...")
-
     try {
       const res = await httpFetch(
         session ? `/api/draconischia/gdr-sessions/${session.id}` : "/api/draconischia/gdr-sessions",
@@ -75,7 +73,6 @@ export default function SessionForm({ onSuccess, session }: SessionFormProps) {
         }
       )
 
-      toast.dismiss()
       const data = await res.json().catch(() => ({}))
 
       if (res.ok) {

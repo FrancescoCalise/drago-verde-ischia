@@ -13,5 +13,6 @@ export interface NewsArticle {
   likes?: NewsLike[] // lista utenti che hanno messo like
   _count?: { likes: number } // conteggio likes
   createdAt?: Date
-  updatedAt?: Date
+  updatedAt?: Date,
+  likedByUser?: boolean // se l'utente corrente ha messo like
 }
