@@ -34,20 +34,25 @@ export async function toggleLikeRequest(
   }
 }
 
+export function updateCurrentLike(
+  articleId: string,
+  articles: NewsArticleExtend[]
+): NewsArticleExtend[] {
+  const updated = articles.map((a) =>
+    a.id === articleId
+      ? {
+          ...a,
+          likedByUser: !a.likedByUser,
+          _count: {
+            ...a._count,
+            likes: a.likedByUser
+              ? a._count.likes - 1
+              : a._count.likes + 1,
+          },
+        }
+      : a
+  )
 
-
-export function updateCurrentLike(articleId: string, articles: NewsArticleExtend[]){
-    articles.map((a) =>
-        a.id === articleId
-          ? {
-              ...a,
-              likedByUser: !a.likedByUser,
-              _count: {
-                ...a._count,
-                likes: a._count.likes + (a.likedByUser ? -1 : 1),
-              },
-            }
-          : a
-      )
-      return articles;
+  console.log("Articles after updateCurrentLike:", updated)
+  return updated
 }

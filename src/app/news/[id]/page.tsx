@@ -76,7 +76,12 @@ export default function NewsArticlePage() {
       <div className="flex items-center gap-6 mt-8">
         <LikeArticle
           article={article}
-          onToggled={() => updateCurrentLike(article.id, [article])}
+          onToggled={() => 
+          {
+            const newA =  updateCurrentLike(article.id, [article])
+            setArticle(newA[0]);
+          }
+          }
         />
 
         {/* 🔐 Pulsanti solo admin */}

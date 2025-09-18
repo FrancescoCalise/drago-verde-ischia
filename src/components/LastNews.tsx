@@ -7,6 +7,7 @@ import { T } from "@/components/ui/T"
 import { NewsArticleExtend } from "@/interfaces/NewArticle"
 import LikeArticle from "./LikeArticle"
 import { updateCurrentLike } from "@/app/news/utils"
+import { httpFetchPublic } from "@/lib/http"
 
 interface LastNewsProps {
   numberOfArticles?: number
@@ -18,7 +19,7 @@ export default function LastNews({ numberOfArticles = 3 }: LastNewsProps) {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await fetch(`/api/news?limit=${numberOfArticles}`)
+        const res = await httpFetchPublic(`/api/news?limit=${numberOfArticles}`)
         if (!res.ok) return
         const data = await res.json()
         setArticles(data.articles || [])
@@ -73,7 +74,9 @@ export default function LastNews({ numberOfArticles = 3 }: LastNewsProps) {
                 <LikeArticle
                   article={article}
                   onToggled={() => { 
-                    updateCurrentLike(article.id, articles)
+                   const newA =  updateCurrentLike(article.id, articles)
+                   
+                   setArticles(newA);
                   }}
                 />
                 {/* Fine Like Section */}

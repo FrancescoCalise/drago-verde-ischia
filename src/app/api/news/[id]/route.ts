@@ -49,7 +49,8 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
     where: { id: params.id },
     include: {
       author: { select: { name: true, surname: true } },
-      _count: { select: { likes: true } }, // conteggio like
+      _count: { select: { likes: true } },
+      likes: { select: { userId: true } },
     },
   })
 
