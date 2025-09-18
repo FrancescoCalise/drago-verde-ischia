@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     try {
       payload = jwt.verify(refreshToken, REFRESH_SECRET)
     } catch (err) {
-      return NextResponse.json({ error: "Refresh token non valido" }, { status: 403 })
+      return NextResponse.json({ error: (err as Error).message }, { status: 403 })
     }
 
     // recupero utente dal DB

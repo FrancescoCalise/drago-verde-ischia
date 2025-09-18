@@ -46,9 +46,15 @@ export default function LoginPage() {
   } else {
     toast.error("❌ Nessun token ricevuto")
   }
-  } catch (err) {
+  } catch (err: unknown) {
     toast.dismiss()
-    toast.error("❌ Impossibile connettersi al server")
+    if (err instanceof Error) {
+      toast.error("❌ Errore di connessione al server:" + err.message)
+      console.error("❌ Errore di connessione al server:", err.message)
+    } else {
+      toast.error("❌ Errore sconosciuto")
+      console.error("❌ Errore sconosciuto:", err)
+    }
   }
 }
 

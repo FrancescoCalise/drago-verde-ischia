@@ -1,17 +1,22 @@
-/* eslint-disable react/no-unescaped-entities */
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { Mail, Phone, Instagram, Facebook, MessageCircle, MapPin } from "lucide-react"
-import { useState } from "react"
-import ReCAPTCHA from "react-google-recaptcha"
-import { toast } from "@/lib/toast"
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Mail,
+  Phone,
+  Instagram,
+  Facebook,
+  MessageCircle,
+  MapPin,
+} from "lucide-react";
+import { useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { toast } from "@/lib/toast";
 
 export default function ContattiPage() {
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
-  const [messageSent, setMessageSent] = useState(false)
-const [emailError, setEmailError] = useState("")
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState("");
 
   // Stato dei campi
   const [formData, setFormData] = useState({
@@ -19,52 +24,54 @@ const [emailError, setEmailError] = useState("")
     email: "",
     subject: "",
     message: "",
-  })
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  const { name, value } = e.target
-  setFormData({ ...formData, [name]: value })
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
 
-  if (name === "email") {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(value)) {
-      setEmailError("Email non valida")
-    } else {
-      setEmailError("")
+    if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        setEmailError("Email non valida");
+      } else {
+        setEmailError("");
+      }
     }
-  }
-}
+  };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    toast.loading("Invio in corso...")
+    toast.loading("Invio in corso...");
 
     try {
-        const res = await fetch("/api/contact", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, token: captchaToken }),
-        })
+      });
 
-        toast.dismiss()
+      toast.dismiss();
 
-        if (res.ok) {
-        toast.success("✅ Messaggio inviato con successo!")
-        setMessageSent(true)
-        setFormData({ name: "", email: "", subject: "", message: "" })
-        setCaptchaToken(null)
-        } else {
-        const data = await res.json()
-        toast.error(data.error || "❌ Errore durante l'invio, riprova più tardi.")
-        }
+      if (res.ok) {
+        toast.success("✅ Messaggio inviato con successo!");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        setCaptchaToken(null);
+      } else {
+        const data = await res.json();
+        toast.error(
+          data.error || "❌ Errore durante l'invio, riprova più tardi."
+        );
+      }
     } catch (error) {
-        toast.dismiss()
-        console.error("Errore invio email:", error)
-        toast.error("❌ Impossibile inviare il messaggio. Riprova più tardi.")
+      toast.dismiss();
+      console.error("Errore invio email:", error);
+      toast.error("❌ Impossibile inviare il messaggio. Riprova più tardi.");
     }
-    }
+  };
 
   // Controllo se tutti i campi richiesti sono pieni
   const isFormValid =
@@ -72,7 +79,7 @@ const [emailError, setEmailError] = useState("")
     formData.email.trim() !== "" &&
     !emailError &&
     formData.message.trim() !== "" &&
-    captchaToken !== null
+    captchaToken !== null;
 
   return (
     <main className="flex flex-col">
@@ -89,7 +96,8 @@ const [emailError, setEmailError] = useState("")
         <div className="relative z-10 max-w-3xl p-6">
           <h1 className="text-5xl md:text-6xl font-bold">Contattaci</h1>
           <p className="mt-4 text-lg md:text-xl">
-            Per qualsiasi informazione, proposta o semplicemente per salutarci, non esitare a scriverci.
+            Per qualsiasi informazione, proposta o semplicemente per salutarci,
+            non esitare a scriverci.
           </p>
         </div>
       </section>
@@ -109,7 +117,9 @@ const [emailError, setEmailError] = useState("")
               priority
             />
           </div>
-          <h2 className="text-2xl font-bold mb-6">I nostri riferimenti diretti</h2>
+          <h2 className="text-2xl font-bold mb-6">
+            I nostri riferimenti diretti
+          </h2>
           <ul className="space-y-4 text-lg text-gray-700">
             <li className="flex items-center gap-3">
               <Mail className="w-6 h-6 text-green-600" />
@@ -125,12 +135,20 @@ const [emailError, setEmailError] = useState("")
             </li>
           </ul>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">Seguici sui social</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4">
+            Seguici sui social
+          </h3>
           <div className="flex gap-6 text-green-600">
-            <Link href="https://www.instagram.com/dragoverdeischia" target="_blank">
+            <Link
+              href="https://www.instagram.com/dragoverdeischia"
+              target="_blank"
+            >
               <Instagram className="w-7 h-7 hover:text-green-800 transition" />
             </Link>
-            <Link href="https://www.facebook.com/DragoVerdeIschia" target="_blank">
+            <Link
+              href="https://www.facebook.com/DragoVerdeIschia"
+              target="_blank"
+            >
               <Facebook className="w-7 h-7 hover:text-green-800 transition" />
             </Link>
             <Link href="https://wa.me/393505731491" target="_blank">
@@ -155,18 +173,20 @@ const [emailError, setEmailError] = useState("")
               />
             </div>
             <div>
-            <label className="block text-gray-700">Indirizzo Email</label>
-            <input
+              <label className="block text-gray-700">Indirizzo Email</label>
+              <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 className={`w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-green-600 ${
-                emailError ? "border-red-500" : ""
+                  emailError ? "border-red-500" : ""
                 }`}
                 required
-            />
-            {emailError && <p className="text-red-600 text-sm mt-1">{emailError}</p>}
+              />
+              {emailError && (
+                <p className="text-red-600 text-sm mt-1">{emailError}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700">Oggetto</label>
@@ -207,30 +227,29 @@ const [emailError, setEmailError] = useState("")
         </div>
       </section>
 
-    {/* Mappa Google */}
-    <section className="w-full px-6 md:px-0 py-12 text-center">
-    <h2 className="text-2xl font-bold mb-6 text-center">Dove trovarci</h2>
-    <div className="w-full h-[250px] md:h-[400px] mb-6">
-        <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3115.3585247795293!2d13.856302815348408!3d40.73765097932821!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133b6d292f9e5f2b%3A0x4b55c79c7e6e1184!2sPiazza%20Maria%20Santissima%20Immacolata%2C%2080075%20Forio%20NA!5e0!3m2!1sit!2sit!4v1700000000000!5m2!1sit!2sit"
-        width="100%"
-        height="100%"
-        style={{ border: 0 }}
-        allowFullScreen={true}
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        ></iframe>
-    </div>
-    <a
-        href="https://www.google.com/maps?q=Piazza+Maria+Santissima+Immacolata,+80075+Forio+NA"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-500 transition"
-    >
-        Apri su Google Maps
-    </a>
-    </section>
-
+      {/* Mappa Google */}
+      <section className="w-full px-6 md:px-0 py-12 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-center">Dove trovarci</h2>
+        <div className="w-full h-[250px] md:h-[400px] mb-6">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3115.3585247795293!2d13.856302815348408!3d40.73765097932821!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133b6d292f9e5f2b%3A0x4b55c79c7e6e1184!2sPiazza%20Maria%20Santissima%20Immacolata%2C%2080075%20Forio%20NA!5e0!3m2!1sit!2sit!4v1700000000000!5m2!1sit!2sit"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen={true}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+        <a
+          href="https://www.google.com/maps?q=Piazza+Maria+Santissima+Immacolata,+80075+Forio+NA"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-500 transition"
+        >
+          Apri su Google Maps
+        </a>
+      </section>
     </main>
-  )
+  );
 }

@@ -1,10 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { showError, showSuccess } from "@/lib/toast";
 import { useAuth } from "@/context/AuthContext";
 import { httpFetch, httpFetchPublic } from "@/lib/http";
@@ -21,18 +18,12 @@ export default function NewsPage() {
   const [totalPages, setTotalPages] = useState(1);
 
   const [search, setSearch] = useState("");
-  const [filterBy, setFilterBy] = useState<"title" | "date" | "author">(
-    "title"
-  );
+  type FilterType = "title" | "date" | "author";
+  const [filterBy, setFilterBy] = useState<FilterType>("title");
 
   const { user } = useAuth();
   const { openModal } = useModal();
-
-  useEffect(() => {
-    fetchArticles();
-  }, [page, search, filterBy]);
-
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     try {
       const res = await httpFetchPublic(
         `/api/news?page=${page}&limit=10&filterBy=${filterBy}&search=${encodeURIComponent(
@@ -47,7 +38,12 @@ export default function NewsPage() {
       console.error(err);
       showError("Errore nel caricamento delle news");
     }
-  };
+  }, [page, search, filterBy]);
+
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
+
   const toggleLike = async (articleId: string) => {
     if (!user) {
       showError("Devi essere loggato per mettere like");
@@ -68,15 +64,15 @@ export default function NewsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await httpFetch(`/api/news/${id}`, { method: "DELETE" })
-      if (!res.ok) throw new Error("Errore eliminazione")
-      showSuccess("Articolo eliminato con successo")
-      fetchArticles()
+      const res = await httpFetch(`/api/news/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Errore eliminazione");
+      showSuccess("Articolo eliminato con successo");
+      fetchArticles();
     } catch (err) {
-      console.error(err)
-      showError("Errore durante l'eliminazione")
+      console.error(err);
+      showError("Errore durante l'eliminazione");
     }
-  }
+  };
 
   return (
     <main className="flex flex-col">
@@ -110,7 +106,7 @@ export default function NewsPage() {
             />
             <select
               value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value as any)}
+              onChange={(e) => setFilterBy(e.target.value as FilterType)}
               className="border rounded px-3 py-2"
             >
               <option value="title">Titolo</option>
@@ -191,26 +187,31 @@ export default function NewsPage() {
 
                     {/* 🔐 Pulsanti solo admin */}
                     {user?.role === UserRole.ADMIN && (
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() =>
-                          openModal(NewsArticleForm, "news.edit", "Modifica News", {
-                            article,
-                            onSuccess: () => fetchArticles(),
-                          })
-                        }
-                        className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                      >
-                        ✏️ Edit
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            openModal(
+                              NewsArticleForm,
+                              "news.edit",
+                              "Modifica News",
+                              {
+                                article,
+                                onSuccess: () => fetchArticles(),
+                              }
+                            )
+                          }
+                          className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                        >
+                          ✏️ Edit
+                        </button>
 
-                      <button
-                        onClick={() => article.id && handleDelete(article.id)}
-                        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                      >
-                        🗑️ Delete
-                      </button>
-                    </div>
+                        <button
+                          onClick={() => article.id && handleDelete(article.id)}
+                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                        >
+                          🗑️ Delete
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>

@@ -3,8 +3,6 @@ import prisma from "@/lib/prisma"
 import { requireAuth } from "@/lib/authMiddleware"
 import { UserRole } from "@/interfaces/UserRole"
 
-type Params = { params: { id: string } }
-
 // UPDATE article
 export async function PUT(req: Request, context: { params: Promise<{ id: string }> }) {
   const params = await context.params;

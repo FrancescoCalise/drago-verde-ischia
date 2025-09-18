@@ -20,7 +20,7 @@ export default function Hero() {
       setCurrentIndex((prev) => (prev + 1) % images.length)
     }, 5000) // cambia ogni 5 secondi
     return () => clearInterval(interval)
-  }, [])
+  }, [images.length])
 
   return (
     <section className="relative h-[50vh] md:h-[60vh] py-12 md:py-0 flex items-center justify-center text-center text-white overflow-hidden">

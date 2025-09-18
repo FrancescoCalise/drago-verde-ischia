@@ -1,7 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { NewsArticle } from "@/interfaces/NewArticle"
 import { Heart } from "lucide-react"
@@ -18,28 +17,26 @@ export default function NewsArticlePage() {
   const [article, setArticle] = useState<NewsArticle | null>(null)
   const [liked, setLiked] = useState(false)
   const [likesCount, setLikesCount] = useState(0)
-//  const [sharesCount, setSharesCount] = useState(0)
   const { openModal } = useModal();
   const router = useRouter()
 
-  useEffect(() => {
-    if (!id) return
-    fetchArticle()
-  }, [id])
+  const fetchArticle = useCallback(async () => {
+    try {
+      const res = await httpFetchPublic(`/api/news/${id}`);
+      if (!res.ok) throw new Error("Errore caricamento articolo");
+      const data = await res.json();
+      setArticle(data);
+      setLikesCount(data._count?.likes ?? 0);
+      setLiked(data.likedByUser ?? false);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [id]);
 
-  const fetchArticle = async () => {
-        try {
-          const res = await httpFetchPublic(`/api/news/${id}`)
-          if (!res.ok) throw new Error("Errore caricamento articolo")
-          const data = await res.json()
-          setArticle(data)
-          setLikesCount(data._count?.likes ?? 0)
-          //setSharesCount(data.shares ?? 0)
-          setLiked(data.likedByUser ?? false)
-        } catch (err) {
-          console.error(err)
-        } 
-  }
+  useEffect(() => {
+    if (!id) return;
+    fetchArticle();
+  }, [id, fetchArticle]);
 
   const toggleLike = async () => {
     if (!user) {
@@ -58,18 +55,6 @@ export default function NewsArticlePage() {
     }
   }
 
-  const shareOnFacebook = async () => {
-    try {
-      await fetch(`/api/news/${id}/share`, { method: "POST" })
-      setSharesCount((prev) => prev + 1)
-
-      const url = `${window.location.origin}/news/${id}`
-      const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
-      window.open(shareUrl, "_blank", "width=600,height=400")
-    } catch {
-      showError("Errore nella condivisione")
-    }
-  }
 
   const handleDelete = async (id: string) => {
       try {
@@ -108,7 +93,7 @@ export default function NewsArticlePage() {
         dangerouslySetInnerHTML={{ __html: article.content }}
       />
 
-      {/* ❤️ Like & 🔗 Share */}
+      {/*Like*/}
       <div className="flex items-center gap-6 mt-8">
         {user ? (
           <button
@@ -121,15 +106,6 @@ export default function NewsArticlePage() {
         ) : (
           <span className="text-gray-500 text-sm">❤️ {likesCount}</span>
         )}
-
-        {/* 
-        <button
-          onClick={shareOnFacebook}
-          className="flex items-center gap-1 text-blue-600 hover:text-blue-700 cursor-pointer"
-        >
-          <Share2 className="w-6 h-6" />
-          <span>{sharesCount}</span>
-        </button> */}
 
         {/* 🔐 Pulsanti solo admin */}
         {user?.role === UserRole.ADMIN && (

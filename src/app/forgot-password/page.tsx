@@ -29,9 +29,15 @@ export default function ForgotPasswordPage() {
     } else {
       toast.success("✅ Se i dati sono corretti, ti abbiamo inviato un'email con il link per reimpostare la password.")
     }
-  } catch (err) {
+  } catch (err: unknown) {
     toast.dismiss()
-    toast.error("❌ Errore di connessione al server")
+    if (err instanceof Error) {
+      toast.error("Errore invio richiesta reset password:" + err.message)
+      console.error("Errore invio richiesta reset password:", err.message)
+    } else {
+      toast.error("Errore sconosciuto")
+      console.error("Errore sconosciuto:", err)
+    }
   } finally {
     setIsSubmitting(false)
   }

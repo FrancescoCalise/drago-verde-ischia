@@ -43,7 +43,10 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ message: "Password aggiornata con successo" })
-  } catch (err) {
-    return NextResponse.json({ error: "Token invalido o scaduto" }, { status: 401 })
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 401 })
+    }
+    return NextResponse.json({ error: "Errore sconosciuto" }, { status: 401 })
   }
 }

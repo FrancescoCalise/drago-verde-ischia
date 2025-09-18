@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode"
+import { httpFetchPublic } from "./http"
 
 let accessToken: string | null = null
 
@@ -24,7 +25,7 @@ export const isTokenExpired = (token: string): boolean => {
 
 export const refreshToken = async (): Promise<string | null> => {
   try {
-    const res = await fetch("/api/auth/refresh", { method: "POST" })
+    const res = await httpFetchPublic("/api/auth/refresh", { method: "POST" })
     if (!res.ok) return null
     const data = await res.json()
     if (data.accessToken) {

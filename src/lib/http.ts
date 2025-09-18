@@ -1,27 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useAuth } from "@/context/AuthContext"
 import { getValidToken } from "@/lib/authToken"
 import { hideSpinner, showSpinner } from "./spinner"
 
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
-
-interface HttpOptions extends RequestInit {
-  body?: any
-}
+type AllowedBody = BodyInit | null | undefined;
 
 async function baseRequest<T>(
   url: string,
   method: HttpMethod,
-  options: HttpOptions = {}
+  options: RequestInit = {}
 ): Promise<T> {
   showSpinner("Caricamento in corso...")
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(options.headers || {}),
   }
-  const res = await fetch(url, {
+  const res = await httpFetchPublic(url, {
     ...options,
     method,
     headers,
@@ -44,14 +39,14 @@ export function useHttp() {
   const { getValidToken, logout } = useAuth()
 
   // --- Public (no token) ---
-  const request = <T>(url: string, method: HttpMethod, options?: HttpOptions) =>
+  const request = <T>(url: string, method: HttpMethod, options?: RequestInit) =>
     baseRequest<T>(url, method, options)
 
   // --- Authenticated (with token + retry) ---
   const requestAuth = async <T>(
     url: string,
     method: HttpMethod,
-    options: HttpOptions = {}
+    options: RequestInit = {}
   ): Promise<T> => {
     showSpinner("Caricamento in corso...")
     let token = await getValidToken()
@@ -101,20 +96,20 @@ export function useHttp() {
 
   return {
     // Public
-    get: <T>(url: string, options?: HttpOptions) => request<T>(url, "GET", options),
-    post: <T>(url: string, body: any, options?: HttpOptions) =>
+    get: <T>(url: string, options?: RequestInit) => request<T>(url, "GET", options),
+    post: <T>(url: string, body: AllowedBody, options?: RequestInit) =>
       request<T>(url, "POST", { ...options, body }),
-    put: <T>(url: string, body: any, options?: HttpOptions) =>
+    put: <T>(url: string, body: AllowedBody, options?: RequestInit) =>
       request<T>(url, "PUT", { ...options, body }),
-    del: <T>(url: string, options?: HttpOptions) => request<T>(url, "DELETE", options),
+    del: <T>(url: string, options?: RequestInit) => request<T>(url, "DELETE", options),
 
     // Authenticated
-    getAuth: <T>(url: string, options?: HttpOptions) => requestAuth<T>(url, "GET", options),
-    postAuth: <T>(url: string, body: any, options?: HttpOptions) =>
+    getAuth: <T>(url: string, options?: RequestInit) => requestAuth<T>(url, "GET", options),
+    postAuth: <T>(url: string, body: AllowedBody, options?: RequestInit) =>
       requestAuth<T>(url, "POST", { ...options, body }),
-    putAuth: <T>(url: string, body: any, options?: HttpOptions) =>
+    putAuth: <T>(url: string, body: AllowedBody, options?: RequestInit) =>
       requestAuth<T>(url, "PUT", { ...options, body }),
-    delAuth: <T>(url: string, options?: HttpOptions) => requestAuth<T>(url, "DELETE", options),
+    delAuth: <T>(url: string, options?: RequestInit) => requestAuth<T>(url, "DELETE", options),
   }
 }
 

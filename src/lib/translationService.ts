@@ -1,4 +1,5 @@
 import i18n from "i18next"
+import { httpFetchPublic } from "./http"
 
 export function translateClient(idml: string, defaultText?: string): string {
    
@@ -15,7 +16,7 @@ export function translateClient(idml: string, defaultText?: string): string {
 
 export async function logMissingIdml(idml: string, defaultText?: string) {
   try {
-    await fetch("/api/logger-idml", {
+    await httpFetchPublic("/api/logger-idml", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ idml, defaultText }),

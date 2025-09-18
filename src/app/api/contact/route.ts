@@ -1,3 +1,4 @@
+import { httpFetchPublic } from "@/lib/http"
 import { NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 
@@ -5,8 +6,7 @@ export async function POST(req: Request) {
   try {
     const { name, email, subject, message, token } = await req.json()
 
-    // 🔹 Verifica reCAPTCHA
-    const captchaRes = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+    const captchaRes = await httpFetchPublic("https://www.google.com/recaptcha/api/siteverify", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
