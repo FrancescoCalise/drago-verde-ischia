@@ -20,17 +20,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it">
-      <body className="flex flex-col min-h-screen">
+      <body className="flex flex-col min-h-screen bg-gray-50">
         <I18nProvider>
-        <AuthProvider>
-          <ModalProvider>
-            <Navbar />
-            <main className="flex-grow">{children}</main>
-            <Toaster richColors position="bottom-center" />
-            <Footer />
-          <GlobalSpinner />
-          </ModalProvider>
-        </AuthProvider>
+          <AuthProvider>
+            <ModalProvider>
+              {/* Navbar sempre in alto */}
+              <Navbar />
+              
+              {/* Main che occupa lo spazio rimanente */}
+              <main className="flex-grow flex flex-col">
+                <div className="flex-1">
+                  {children}
+                </div>
+                {/* Footer */}
+                <Footer />
+              </main>
+
+             
+
+              {/* Toast + Spinner globali */}
+              <Toaster richColors position="bottom-center" />
+              <GlobalSpinner />
+            </ModalProvider>
+          </AuthProvider>
         </I18nProvider>
       </body>
     </html>

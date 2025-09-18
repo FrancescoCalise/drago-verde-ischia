@@ -151,7 +151,7 @@ export default function ChiSiamoPage() {
           Unisciti al Drago Verde Ischia e diventa parte della nostra community!
         </p>
         <Link
-          href="/register"
+          href="/user/register"
           className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100"
         >
           Entra nella community

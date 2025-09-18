@@ -52,10 +52,43 @@
     "errorMismatch": "Le password non coincidono",
     "errorConnection": "Errore di connessione al server"
     },
-  "manageEventPage": {
-    "addSession": "Aggiungi Sessione",
-    "editSession": "Modifica Sessione",
-    "addMainEvent": "Aggiungi Main Event",
-    "editMainEvent": "Modifica Main Event"
+    "footer": {
+      "tagline": "Community unita dal gioco e dalla fantasia.",
+      "contacts": {
+        "title": "Contatti"
+      },
+      "social": {
+        "title": "Seguici"
+      }
+    },
+    "nav": {
+      "about": "Chi Siamo",
+      "events": "Eventi",
+      "dracon": "DraCon Ischia",
+      "dracon.agenda": "Programma",
+      "dracon.sessions": "Sessioni GDR",
+      "dracon.mainEvents": "Main Events",
+      "dracon.rules": "Regolamenti & FAQ",
+      "dracon.manage": "Gestisci Eventi",
+      "dracon.old": "Edizioni Passate",
+      "media": "Media",
+      "support": "Sostienici",
+      "support.5x1000": "5×1000",
+      "support.donations": "Donazioni",
+      "support.membership": "Tesseramento",
+      "news": "News",
+      "contacts": "Contatti",
+      "dashboard": "Dashboard",
+      "profile": "Profilo",
+      "logout": "Logout",
+      "login": "Login",
+      "join": "Unisciti a Noi"
+    },
+    "copyright": "Drago Verde Ischia A.P.S.",
+    "manageEventPage": {
+      "addSession": "Aggiungi Sessione",
+      "editSession": "Modifica Sessione",
+      "addMainEvent": "Aggiungi Main Event",
+      "editMainEvent": "Modifica Main Event"
   }
 }

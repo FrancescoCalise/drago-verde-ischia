@@ -36,7 +36,7 @@ export default function SessioniGdrPage() {
   const handleBook = async (id: string) => {
     if (!user) {
       showInfo("Effettua il login per prenotarti")
-      router.push("/login")
+      router.push("/user/login")
       return
     }
 
@@ -60,7 +60,7 @@ export default function SessioniGdrPage() {
   const handleCancelgdrSessionRegistrations = async (id: string) => {
     if (!user) {
       showInfo("Effettua il login per gestire la prenotazione")
-      router.push("/login")
+      router.push("/user/login")
       return
     }
 
@@ -126,7 +126,7 @@ export default function SessioniGdrPage() {
                 {!user ? (
                   // Caso 1: non loggato
                   <button
-                    onClick={() => router.push("/login")}
+                    onClick={() => router.push("/user/login")}
                     className="mt-2 w-full px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     Effettua il login

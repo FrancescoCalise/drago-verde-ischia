@@ -11,7 +11,7 @@ export default function UserDashboard() {
   // 🔄 redirect se non loggato
   useEffect(() => {
     if (!user) {
-      router.push("/login")
+      router.push("/user/login")
     }
   }, [user, router])
 

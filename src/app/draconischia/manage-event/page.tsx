@@ -120,7 +120,7 @@ export default function ManageEventPage() {
 
     if (!user) {
       showInfo("Effettua il login per accedere");
-      router.push("/login");
+      router.push("/user/login");
     } else if (user.role !== UserRole.ADMIN) {
       showError("❌ Non sei autorizzato");
       router.push("/draconischia");

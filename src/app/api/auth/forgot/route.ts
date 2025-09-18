@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     { expiresIn: "15m" }
   )
 
-  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`
+  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/user/reset-password?token=${resetToken}`
 
   try {
     await sendResetPasswordEmail(user.email, user.name, resetUrl)
