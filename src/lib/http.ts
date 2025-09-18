@@ -1,6 +1,7 @@
 import { useAuth } from "@/context/AuthContext"
 import { getValidToken } from "@/lib/authToken"
 import { hideSpinner, showSpinner } from "./spinner"
+import { corsHeaders } from "./_shared/cors";
 
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
@@ -124,6 +125,7 @@ export async function httpFetch(
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    ...corsHeaders,
     ...(options.headers as Record<string, string>),
     Authorization: `Bearer ${token}`,
   }
@@ -144,6 +146,7 @@ export async function httpFetchPublic(
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    ...corsHeaders,
     ...(options.headers as Record<string, string>),
   }
   
