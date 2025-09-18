@@ -1,11 +1,4 @@
-export type AppUser = {
-  id: string
-  username: string
-  role: string
-  name?: string
-  surname?: string
-  email?: string
-}
+import { AppUser } from "@/generated/prisma"
 
 export type AuthContextType  = {
   user: AppUser | null

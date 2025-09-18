@@ -15,10 +15,10 @@ const MENU_ITEMS: MenuItemWithFlags[] = [
   { idml: "nav.about", defaultText: "Chi Siamo", href: "/chi-siamo", visible: true },
   { idml: "nav.events", defaultText: "Eventi", href: "/events", visible: true },
   {
-    idml: "nav.dracon", defaultText: "DraCon Ischia", href: "/draconischia", visible: true,
+    idml: "nav.dracon", defaultText: "DraCon Ischia", visible: true,
     children: [ 
       {
-        idml: "nav.dracon", defaultText: "DraCon Ischia", href: "/draconischia", visible: true,
+        idml: "nav.dracon.homePage", defaultText: "Home", href: "/draconischia", visible: true,
       },
       { idml: "nav.dracon.agenda", defaultText: "Programma", href: "/draconischia/agenda", visible: true},
       { idml: "nav.dracon.sessions", defaultText: "Sessioni GDR", href: "/draconischia/gdr-sessions", visible: true },
@@ -52,17 +52,18 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
         {/* Logo + Titolo */}
         <Link href="/" className="flex items-center gap-3">
-          <div className="relative w-12 h-12 flex-shrink-0">
+          {/* <div className="relative w-20 h-20 flex-shrink-0">
             <Image
-              src="/logo-drago-verde-bianco.png"
+              src="/logo-drago-verde-nero.png"
               alt="Logo Drago Verde Ischia"
               fill
-              className="object-contain"
+              className="object-contain rounded-full"
               priority
+              style={{ backgroundColor: "white" }}
             />
-          </div>
+          </div> */}
           <span className="text-lg font-bold whitespace-nowrap">
-            Drago Verde Ischia
+            Drago Verde Ischia A.P.S.
           </span>
         </Link>
 

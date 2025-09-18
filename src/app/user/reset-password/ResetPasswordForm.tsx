@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { T } from "@/components/ui/T"
 import { toast } from "@/lib/toast"
+import { ResponsiveCard } from "@/components/ui/ResponsiveCard"
 
 export default function ResetPasswordForm({ token }: { token: string }) {
   const [password, setPassword] = useState("")
@@ -56,14 +57,13 @@ export default function ResetPasswordForm({ token }: { token: string }) {
   }
 
   return (
-  <div className="flex justify-center items-start w-full px-4 py-12">
-    <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl shadow-lg border rounded-2xl">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-gray-800">
+    <ResponsiveCard>
+      <ResponsiveCard.Header className="text-center">
+        <ResponsiveCard.Title className="text-2xl font-bold text-gray-800">
           <T idml="reset.title" defaultText="Reset Password" />
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </ResponsiveCard.Title>
+      </ResponsiveCard.Header>
+      <ResponsiveCard.Content>
         <form onSubmit={handleReset} className="space-y-4">
           {/* Nuova password */}
           <div className="space-y-2">
@@ -104,8 +104,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
             )}
           </Button>
         </form>
-      </CardContent>
-    </Card>
-  </div>
+      </ResponsiveCard.Content>
+    </ResponsiveCard>
 )
 }

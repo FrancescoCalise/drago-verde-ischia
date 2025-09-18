@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { T } from "@/components/ui/T"
+import { ResponsiveCard } from "@/components/ui/ResponsiveCard"
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -112,14 +113,13 @@ export default function RegisterPage() {
   }
 
   return (
-  <div className="flex justify-center items-start w-full px-4 py-12">
-    <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl shadow-lg border rounded-2xl">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-gray-800">
+    <ResponsiveCard>
+      <ResponsiveCard.Header className="text-center">
+        <ResponsiveCard.Title className="text-2xl font-bold text-gray-800">
           <T idml="register.title" defaultText="Registrazione" />
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </ResponsiveCard.Title>
+      </ResponsiveCard.Header>
+      <ResponsiveCard.Content>
         <form onSubmit={handleRegister} className="space-y-4">
           {/* Nome */}
           <div className="space-y-2">
@@ -267,9 +267,8 @@ export default function RegisterPage() {
             <T idml="register.submit" defaultText="Registrati" />
           </Button>
         </form>
-      </CardContent>
-    </Card>
-  </div>
+      </ResponsiveCard.Content>
+    </ResponsiveCard>
 )
 
 }

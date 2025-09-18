@@ -65,6 +65,7 @@
       "about": "Chi Siamo",
       "events": "Eventi",
       "dracon": "DraCon Ischia",
+      "dracon.homePage": "Home",
       "dracon.agenda": "Programma",
       "dracon.sessions": "Sessioni GDR",
       "dracon.mainEvents": "Main Events",
@@ -85,6 +86,18 @@
       "join": "Unisciti a Noi"
     },
     "copyright": "Drago Verde Ischia A.P.S.",
+    "hero":{
+      "title": "Drago Verde Ischia",
+      "subtitle": "La community di gioco di ruolo dal vivo e da tavolo di Ischia"
+    },
+    "featured": {
+      "subtitle": "Il nostro prossimo evento",
+      "title": "DraCon Ischia",
+      "date": "📅 11 e 12 Ottobre",
+      "location": "📍 Cittadella della Carità, Forio",
+      "description": "Il festival del gioco e della cultura nerd che unisce l'isola d'Ischia. Giochi da tavolo, di ruolo, tornei, cosplay, conferenze e tanto altro.",
+      "cta": "Scopri tutti i dettagli"
+    },
     "manageEventPage": {
       "addSession": "Aggiungi Sessione",
       "editSession": "Modifica Sessione",

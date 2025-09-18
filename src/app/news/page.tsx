@@ -6,14 +6,15 @@ import { showError, showSuccess } from "@/lib/toast";
 import { useAuth } from "@/context/AuthContext";
 import { httpFetch, httpFetchPublic } from "@/lib/http";
 import { UserRole } from "@/interfaces/UserRole";
-import { NewsArticle } from "@/interfaces/NewArticle";
+import { NewsArticleExtend } from "@/interfaces/NewArticle";
 import { useModal } from "@/lib/modal";
 import NewsArticleForm from "@/components/forms/NewsArticleForm";
-import { Heart } from "lucide-react";
 import { getOnlyDate } from "@/lib/manageDataUtils";
+import { toggleLikeRequest } from "./utils";
+import LikeArticle from "@/components/LikeArticle";
 
 export default function NewsPage() {
-  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [articles, setArticles] = useState<NewsArticleExtend[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -44,23 +45,6 @@ export default function NewsPage() {
     fetchArticles();
   }, [fetchArticles]);
 
-  const toggleLike = async (articleId: string) => {
-    if (!user) {
-      showError("Devi essere loggato per mettere like");
-      return;
-    }
-    try {
-      const isLiked = articles.find((a) => a.id === articleId)?.likedByUser;
-      const method = isLiked ? "DELETE" : "POST";
-
-      const res = await httpFetch(`/api/news/${articleId}/like`, { method });
-      if (res.ok) {
-        fetchArticles();
-      }
-    } catch {
-      showError("Errore nel mettere like");
-    }
-  };
 
   const handleDelete = async (id: string) => {
     try {
@@ -168,22 +152,10 @@ export default function NewsPage() {
 
                   <div className="flex justify-between items-center mt-4">
                     {/*Like */}
-                    {user ? (
-                      <button
-                        onClick={() => article.id && toggleLike(article.id)}
-                        className="flex items-center gap-1 text-red-500 hover:text-red-600 cursor-pointer"
-                      >
-                        <Heart
-                          className="w-5 h-5"
-                          fill={article.likedByUser ? "currentColor" : "none"}
-                        />
-                        <span>{article._count?.likes ?? 0}</span>
-                      </button>
-                    ) : (
-                      <span className="text-gray-500 text-sm">
-                        ❤️ {article._count?.likes ?? 0}
-                      </span>
-                    )}
+                    <LikeArticle
+                      article={article}
+                      onToggled={fetchArticles} // ricarica lista articoli
+                    />
 
                     {/* 🔐 Pulsanti solo admin */}
                     {user?.role === UserRole.ADMIN && (
@@ -213,6 +185,7 @@ export default function NewsPage() {
                         </button>
                       </div>
                     )}
+                    
                   </div>
                 </div>
               </div>

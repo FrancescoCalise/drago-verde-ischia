@@ -1,32 +1,53 @@
-/* eslint-disable react/no-unescaped-entities */
+"use client"
+
 import Link from "next/link"
+import Image from "next/image"
+import { T } from "@/components/ui/T"
 
 export default function FeaturedEvent() {
   return (
-    <section className="py-16 bg-gray-100">
+    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
-        <div>
-          <img
+        
+        {/* Immagine evento */}
+        <div className="relative w-full h-64 md:h-96 rounded-xl overflow-hidden shadow-lg">
+          <Image
             src="/dracon-ischia.jpg"
             alt="DraCon Ischia"
-            className="rounded-xl shadow-lg"
+            fill
+            className="object-cover"
+            priority
           />
         </div>
-        <div>
-          <h3 className="text-3xl font-bold mb-4">Il nostro prossimo evento: </h3>
-          <h2 className="text-3xl font-bold mb-4">DraCon Ischia</h2>
 
-          <p className="mb-2 font-semibold">📅 11 e 12 Ottobre</p>
-          <p className="mb-2 font-semibold">📍 Cittadella della Carità, Forio</p>
-          <p className="text-gray-700 mb-6">
-            Il festival del gioco e della cultura nerd che unisce l'isola d'Ischia.  
-            Giochi da tavolo, di ruolo, tornei, cosplay, conferenze e tanto altro.
+        {/* Dettagli evento */}
+        <div className="space-y-4 text-center md:text-left">
+          <h3 className="text-2xl md:text-3xl font-bold text-green-700">
+            <T idml="featured.subtitle" defaultText="Il nostro prossimo evento" />
+          </h3>
+          <h2 className="text-3xl md:text-4xl font-extrabold">
+            <T idml="featured.title" defaultText="DraCon Ischia" />
+          </h2>
+
+          <p className="text-lg font-semibold">
+            <T idml="featured.date" defaultText="📅 11 e 12 Ottobre" />
           </p>
+          <p className="text-lg font-semibold">
+            <T idml="featured.location" defaultText="📍 Cittadella della Carità, Forio" />
+          </p>
+
+          <p className="text-gray-600 leading-relaxed">
+            <T
+              idml="featured.description"
+              defaultText="Il festival del gioco e della cultura nerd che unisce l'isola d'Ischia. Giochi da tavolo, di ruolo, tornei, cosplay, conferenze e tanto altro."
+            />
+          </p>
+
           <Link
             href="/eventi/dracon-ischia"
-            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-500"
+            className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-500 transition font-semibold"
           >
-            Tutti i dettagli sull'evento
+            <T idml="featured.cta" defaultText="Scopri tutti i dettagli" />
           </Link>
         </div>
       </div>

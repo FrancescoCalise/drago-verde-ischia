@@ -1,7 +1,8 @@
 "use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from "react"
-import { AppUser, AuthContextType } from "@/interfaces/AppUser"
+import {  AuthContextType } from "@/interfaces/AppUser"
 import { setAccessToken, getValidToken } from "@/lib/authToken" 
+import { AppUser } from "@/generated/prisma"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
