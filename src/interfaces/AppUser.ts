@@ -6,6 +6,7 @@ export type AuthContextType  = {
   logout: () => void
   getValidToken: () => Promise<string | null>
   loading: boolean
+  updateUser: (newUser: AppUser) => void
 }
 
 export type JWTPayload = {

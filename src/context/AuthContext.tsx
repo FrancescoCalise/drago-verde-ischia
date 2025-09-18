@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import {  AuthContextType } from "@/interfaces/AppUser"
 import { setAccessToken, getValidToken } from "@/lib/authToken" 
 import { AppUser } from "@/generated/prisma"
+import { hideSpinner, showSpinner } from "@/lib/spinner"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -10,13 +11,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AppUser | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Carica utente da localStorage all’avvio
   useEffect(() => {
-    const savedUser = localStorage.getItem("user")
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
+    showSpinner();
+    const stored = localStorage.getItem("user")
+    if (stored) {
+      setUser(JSON.parse(stored))
     }
     setLoading(false)
+    hideSpinner();
   }, [])
 
   const login = (user: AppUser, token: string) => {
@@ -30,9 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAccessToken(null)
     localStorage.removeItem("user")
   }
+  
+  const updateUser = (newUser: AppUser) => {
+    setUser(newUser)
+    localStorage.setItem("user", JSON.stringify(newUser))
+  }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, getValidToken, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, getValidToken, loading, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

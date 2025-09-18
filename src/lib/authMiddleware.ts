@@ -11,7 +11,7 @@ if (!JWT_SECRET) {
 export type DecodedUser = {
   id: string
   username: string
-  role?: string
+  role: string
 }
 
 export async function requireAuth(req: Request, roles?: string[]) {

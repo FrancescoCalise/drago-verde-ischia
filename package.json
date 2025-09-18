@@ -53,6 +53,7 @@
     "@types/bcrypt": "^6.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/jwt-decode": "^3.1.0",
+    "@types/next-auth": "^3.15.0",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.1",
     "@types/react": "^19",

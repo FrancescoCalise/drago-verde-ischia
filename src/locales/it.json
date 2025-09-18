@@ -197,6 +197,38 @@
     "donation.paypal.note": "La donazione sarà inviata a dragoverdeischia@gmail.com tramite PayPal.",
     "donation.amount.custom": "Importo personalizzato",
     "donation.cta.title": "Grazie per il tuo supporto!",
-    "donation.cta.desc": "Ogni euro è un tassello che ci aiuta a costruire nuovi eventi e momenti di gioco."
+    "donation.cta.desc": "Ogni euro è un tassello che ci aiuta a costruire nuovi eventi e momenti di gioco.",
 
-}
+
+    "contacts.title": "Contattaci",
+    "contacts.subtitle": "Per qualsiasi informazione, proposta o semplicemente per salutarci, non esitare a scriverci.",
+    "contacts.direct": "I nostri riferimenti diretti",
+    "contacts.follow": "Seguici sui social",
+    "contacts.form.title": "Inviaci un messaggio",
+    "contacts.form.name": "Nome e Cognome",
+    "contacts.form.email": "Indirizzo Email",
+    "contacts.form.subject": "Oggetto",
+    "contacts.form.message": "Messaggio",
+    "contacts.form.submit": "Invia Messaggio",
+    "contacts.map.title": "Dove trovarci",
+    "contacts.map.cta": "Apri su Google Maps",
+
+    "user.profile.title": "Il tuo profilo",
+    "user.profile.name": "Nome",
+    "user.profile.surname": "Cognome",
+    "user.profile.email": "Email",
+    "user.profile.username": "Username",
+    "user.profile.role": "Ruolo",
+
+    "user.profile.manageAccount": "Gestisci Account",
+    "user.profile.changeEmail": "Cambia Email",
+    "user.profile.confirmEmail": "Conferma",
+    "user.profile.changePassword": "Cambia Password",
+    "user.profile.confirmPassword": "Conferma",
+
+    "user.profile.memberInfo": "Informazioni Socio",
+
+    "user.profile.deleteAccount": "Elimina Account",
+    "user.profile.deleteBtn": "Elimina Account",
+    "user.profile.deleteHint": "Non puoi cancellare il tuo account se sei socio."
+  }

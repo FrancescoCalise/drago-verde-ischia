@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer"
+import { MailOptions } from "nodemailer/lib/json-transport"
+
+const fromEmail = `"Drago Verde Ischia" <${process.env.EMAIL_USER}>`;
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -12,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 export async function sendWelcomeEmail(to: string, username: string, name: string) {
   const mailOptions = {
-    from: `"Drago Verde Ischia" <${process.env.EMAIL_USER}>`,
+    from: fromEmail,
     to,
     subject: "Benvenuto in Drago Verde Ischia!",
     html: `
@@ -30,7 +33,7 @@ export async function sendWelcomeEmail(to: string, username: string, name: strin
 
 export async function sendResetPasswordEmail(to: string, name: string, resetUrl: string) {
   const mailOptions = {
-    from: `"Drago Verde Ischia" <${process.env.EMAIL_USER}>`,
+    from: fromEmail,
     to,
     subject: "Reset password - Drago Verde Ischia",
     html: `
@@ -48,7 +51,7 @@ export async function sendResetPasswordEmail(to: string, name: string, resetUrl:
 
 export async function sendPasswordChangedEmail(to: string, name: string) {
   const mailOptions = {
-    from: `"Drago Verde Ischia" <${process.env.EMAIL_USER}>`,
+    from: fromEmail,
     to,
     subject: "Conferma cambio password - Drago Verde Ischia",
     html: `
@@ -61,4 +64,27 @@ export async function sendPasswordChangedEmail(to: string, name: string) {
   }
 
   await transporter.sendMail(mailOptions)
+}
+
+/**
+ * Utility per inviare email con Nodemailer
+ * Richiede variabili ambiente configurate:
+ * - SMTP_HOST
+ * - SMTP_PORT
+ * - SMTP_USER
+ * - SMTP_PASS
+ * - SMTP_FROM (mittente di default)
+ */
+export async function sendMail({ to, subject, text, html }: MailOptions) {
+
+    const mailOptions = {
+        from: fromEmail,
+        to,
+        subject: subject,
+        html:html,
+        text:text
+      }
+
+    await transporter.sendMail(mailOptions)
+   
 }
