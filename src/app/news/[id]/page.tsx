@@ -2,21 +2,20 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { NewsArticle } from "@/interfaces/NewArticle"
-import { Heart } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import { showError, showSuccess } from "@/lib/toast"
 import { httpFetch, httpFetchPublic } from "@/lib/http"
 import { UserRole } from "@/interfaces/UserRole"
 import { useModal } from "@/lib/modal"
 import NewsArticleForm from "@/components/forms/NewsArticleForm"
+import { NewsArticleExtend } from "@/interfaces/NewArticle"
+import { updateCurrentLike } from "../utils"
+import LikeArticle from "@/components/LikeArticle"
 
 export default function NewsArticlePage() {
   const { id } = useParams()
   const { user } = useAuth()
-  const [article, setArticle] = useState<NewsArticle | null>(null)
-  const [liked, setLiked] = useState(false)
-  const [likesCount, setLikesCount] = useState(0)
+  const [article, setArticle] = useState<NewsArticleExtend | null>(null)
   const { openModal } = useModal();
   const router = useRouter()
 
@@ -26,8 +25,6 @@ export default function NewsArticlePage() {
       if (!res.ok) throw new Error("Errore caricamento articolo");
       const data = await res.json();
       setArticle(data);
-      setLikesCount(data._count?.likes ?? 0);
-      setLiked(data.likedByUser ?? false);
     } catch (err) {
       console.error(err);
     }
@@ -37,24 +34,6 @@ export default function NewsArticlePage() {
     if (!id) return;
     fetchArticle();
   }, [id, fetchArticle]);
-
-  const toggleLike = async () => {
-    if (!user) {
-      showError("Devi essere loggato per mettere like")
-      return
-    }
-    try {
-      const method = liked ? "DELETE" : "POST"
-      const res = await httpFetchPublic(`/api/news/${id}/like`, { method })
-      if (res.ok) {
-        setLiked(!liked)
-        setLikesCount((prev) => (liked ? prev - 1 : prev + 1))
-      }
-    } catch {
-      showError("Errore nel mettere like")
-    }
-  }
-
 
   const handleDelete = async (id: string) => {
       try {
@@ -95,17 +74,10 @@ export default function NewsArticlePage() {
 
       {/*Like*/}
       <div className="flex items-center gap-6 mt-8">
-        {user ? (
-          <button
-            onClick={toggleLike}
-            className="flex items-center gap-1 text-red-500 hover:text-red-600 cursor-pointer"
-          >
-            <Heart className="w-6 h-6" fill={liked ? "currentColor" : "none"} />
-            <span>{likesCount}</span>
-          </button>
-        ) : (
-          <span className="text-gray-500 text-sm">❤️ {likesCount}</span>
-        )}
+        <LikeArticle
+          article={article}
+          onToggled={() => updateCurrentLike(article.id, [article])}
+        />
 
         {/* 🔐 Pulsanti solo admin */}
         {user?.role === UserRole.ADMIN && (

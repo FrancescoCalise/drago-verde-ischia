@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { T } from "@/components/ui/T"
 import { NewsArticleExtend } from "@/interfaces/NewArticle"
 import LikeArticle from "./LikeArticle"
+import { updateCurrentLike } from "@/app/news/utils"
 
 interface LastNewsProps {
   numberOfArticles?: number
@@ -71,21 +72,8 @@ export default function LastNews({ numberOfArticles = 3 }: LastNewsProps) {
                 {/* Like Section */}
                 <LikeArticle
                   article={article}
-                  onToggled={() => {
-                    // ricarica dopo like
-                    const updated = articles.map((a) =>
-                      a.id === article.id
-                        ? {
-                            ...a,
-                            likedByUser: !a.likedByUser,
-                            _count: {
-                              ...a._count,
-                              likes: a._count.likes + (a.likedByUser ? -1 : 1),
-                            },
-                          }
-                        : a
-                    )
-                    setArticles(updated)
+                  onToggled={() => { 
+                    updateCurrentLike(article.id, articles)
                   }}
                 />
                 {/* Fine Like Section */}

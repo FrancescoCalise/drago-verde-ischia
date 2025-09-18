@@ -2,6 +2,7 @@
 "use client"
 
 import { AppUser } from "@/generated/prisma"
+import { NewsArticleExtend } from "@/interfaces/NewArticle"
 import { httpFetch } from "@/lib/http"
 import { showError } from "@/lib/toast"
 
@@ -31,4 +32,22 @@ export async function toggleLikeRequest(
     showError("Errore di connessione")
     return false
   }
+}
+
+
+
+export function updateCurrentLike(articleId: string, articles: NewsArticleExtend[]){
+    articles.map((a) =>
+        a.id === articleId
+          ? {
+              ...a,
+              likedByUser: !a.likedByUser,
+              _count: {
+                ...a._count,
+                likes: a._count.likes + (a.likedByUser ? -1 : 1),
+              },
+            }
+          : a
+      )
+      return articles;
 }

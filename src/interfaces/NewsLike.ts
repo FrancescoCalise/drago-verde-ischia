@@ -1,4 +1,4 @@
-import { AppUser } from "./AppUser"
+import { AppUser } from "@/generated/prisma"
 
 export interface NewsLike {
   id?: string

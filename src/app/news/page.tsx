@@ -10,7 +10,6 @@ import { NewsArticleExtend } from "@/interfaces/NewArticle";
 import { useModal } from "@/lib/modal";
 import NewsArticleForm from "@/components/forms/NewsArticleForm";
 import { getOnlyDate } from "@/lib/manageDataUtils";
-import { toggleLikeRequest } from "./utils";
 import LikeArticle from "@/components/LikeArticle";
 
 export default function NewsPage() {
