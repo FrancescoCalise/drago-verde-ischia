@@ -23,7 +23,7 @@ const MENU_ITEMS: MenuItemWithFlags[] = [
       { idml: "nav.dracon.agenda", defaultText: "Programma", href: "/draconischia/agenda", visible: true},
       { idml: "nav.dracon.sessions", defaultText: "Sessioni GDR", href: "/draconischia/gdr-sessions", visible: true },
       { idml: "nav.dracon.mainEvents", defaultText: "Main Events", href: "/draconischia/main-events", visible: true },
-      { idml: "nav.dracon.rules", defaultText: "Regolamenti & FAQ", href: "/draconischia/regolamenti", visible: true },
+      { idml: "nav.dracon.rules", defaultText: "Regolamenti & FAQ", href: "/draconischia/regulations", visible: true },
       { idml: "nav.dracon.manage", defaultText: "Gestisci Eventi", href: "/draconischia/manage-event", visible: false, forcedVisible: true },
       { idml: "nav.dracon.old", defaultText: "Edizioni Passate", href: "/draconischia/old-edition", visible: false, forcedVisible: true }
     ]
@@ -32,9 +32,9 @@ const MENU_ITEMS: MenuItemWithFlags[] = [
   {
     idml: "nav.support", defaultText: "Sostienici", visible: true,
     children: [
-      { idml: "nav.support.5x1000", defaultText: "5×1000", href: "/sostienici/5x1000", visible: true },
-      { idml: "nav.support.donations", defaultText: "Donazioni", href: "/sostienici/donazioni", visible: true },
-      { idml: "nav.support.membership", defaultText: "Tesseramento", href: "/sostienici/tesseramento", visible: true }
+      { idml: "nav.support.5x1000", defaultText: "5×1000", href: "/support/5x1000", visible: true },
+      { idml: "nav.support.donations", defaultText: "Donazioni", href: "/support/donation", visible: true },
+      { idml: "nav.support.membership", defaultText: "Tesseramento", href: "/support/subscription", visible: true }
     ]
   },
   { idml: "nav.news", defaultText: "News", href: "/news", visible: true },

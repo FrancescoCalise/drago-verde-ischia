@@ -9,7 +9,7 @@ export default function EventiPage() {
       title: "DragoDì - Serata gioco libero",
       date: "Ogni Venerdì dalle ore 21:00",
       desc: "Il nostro appuntamento fisso per tutti gli appassionati. Vieni a provare i nostri giochi o porta il tuo preferito!",
-      link: "/eventi/dragodi",
+      link: "/events/dragodi",
       cta: "Scopri di più",
     },
     {
@@ -17,7 +17,7 @@ export default function EventiPage() {
       title: "Roll & Role",
       date: "Ogni Giovedi dalle ore 21:00",
       desc: "Serata dedicata al gioco di ruolo.",
-      link: "/eventi/roll-and-role",
+      link: "/events/roll-and-role",
       cta: "Dettagli evento",
     },
     {
@@ -25,16 +25,8 @@ export default function EventiPage() {
       title: "Game Island Forio",
       date: "Non in programma per il 2025",
       desc: "Il festival del gioco che unisce l'isola d'Ischia. Due giorni di tornei, incontri con autori e tanto divertimento.",
-      link: "/eventi/game-island-forio",
+      link: "/events/game-island-forio",
       cta: "Tutti i dettagli delle edizioni passate",
-    },
-    {
-      img: "/events/draconischia.jpg",
-      title: "DraCon ischia",
-      date: "11-12 Ottobre 2025",
-      desc: "La nostra convention annuale. Un weekend interamente dedicato al gioco con tornei e tante sorprese.",
-      link: "/draconischia",
-      cta: "Tutti i dettagli",
     }
   ]
 
