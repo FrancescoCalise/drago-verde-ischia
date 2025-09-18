@@ -58,9 +58,11 @@ export default function ContactsPage() {
         const data = await res.json()
         toast.error(data.error || "❌ Errore durante l'invio, riprova più tardi.")
       }
-    } catch (error) {
+    } catch (error: unknown) {
       toast.dismiss()
-      toast.error("❌ Impossibile inviare il messaggio. Riprova più tardi.")
+      if (error instanceof Error) {
+        toast.error(error.message || "❌ Errore durante l'invio, riprova più tardi.")
+      }
     }
   }
 
