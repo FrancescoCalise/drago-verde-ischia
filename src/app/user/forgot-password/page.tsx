@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { T } from "@/components/ui/T"
-import { ResponsiveCard } from "@/components/ui/ResponsiveCard"
+import { ResponsiveCard } from "@/components/ui/custom/ResponsiveCard"
 
 export default function ForgotPasswordPage() {
   const [username, setUsername] = useState("")

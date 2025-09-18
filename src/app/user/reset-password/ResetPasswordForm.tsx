@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { T } from "@/components/ui/T"
 import { toast } from "@/lib/toast"
-import { ResponsiveCard } from "@/components/ui/ResponsiveCard"
+import { ResponsiveCard } from "@/components/ui/custom/ResponsiveCard"
 
 export default function ResetPasswordForm({ token }: { token: string }) {
   const [password, setPassword] = useState("")

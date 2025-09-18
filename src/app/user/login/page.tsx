@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { T } from "@/components/ui/T"
 import { toast } from "@/lib/toast"
 import { useAuth } from "@/context/AuthContext"
-import { ResponsiveCard } from "@/components/ui/ResponsiveCard"
+import { ResponsiveCard } from "@/components/ui/custom/ResponsiveCard"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")

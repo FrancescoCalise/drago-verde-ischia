@@ -230,5 +230,52 @@
 
     "user.profile.deleteAccount": "Elimina Account",
     "user.profile.deleteBtn": "Elimina Account",
-    "user.profile.deleteHint": "Non puoi cancellare il tuo account se sei socio."
-  }
+    "user.profile.deleteHint": "Non puoi cancellare il tuo account se sei socio.",
+
+    "dracon.title": "DraCon Ischia",
+    "dracon.subtitle": "La convention ludica a ingresso gratuito",
+    
+    "dracon.countdown.title": "Il conto alla rovescia è iniziato!",
+    "dracon.countdown.days": "Mancano",
+    "dracon.countdown.toEvent": "giorni a DraCon Ischia!",
+
+    "dracon.highlight.boardgames": "100+ Giochi da Tavolo",
+    "dracon.highlight.boardgamesDesc": "Dai grandi classici alle ultime novità, trova sempre un tavolo pronto ad accoglierti.",
+    "dracon.highlight.rpg": "Sessioni GDR Gratuite",
+    "dracon.highlight.rpgDesc": "Prenota la tua avventura ed entra nei panni del tuo eroe.",
+    "dracon.highlight.mainEvents": "Main Events con premi epici",
+    "dracon.highlight.mainEventsDesc": "Sfida i migliori giocatori e dimostra il tuo valore.",
+    
+    "dracon.story.title": "Perché DraCon è speciale?",
+    "dracon.story.p1": "DraCon non è solo un evento, è un portale verso mondi fantastici. Per due giorni, Forio diventa l’isola del gioco e dell’immaginazione.",
+    "dracon.story.p2": "Entra nei panni di un eroe, sfida i draghi e incontra altri appassionati come te. Le storie che vivrai qui resteranno per sempre con te.",
+    "dracon.story.cta": "Scopri il programma completo",
+
+    "dracon.info.location": "Dove si svolge",
+    "dracon.info.locationDesc": "Cittadella della Carità, Forio d’Ischia (NA)",
+    "dracon.info.access": "Ingresso e prenotazioni",
+    "dracon.info.accessDesc": "Ingresso gratuito. Prenotazione obbligatoria per GDR e tornei.",
+    "dracon.info.program": "Programma",
+    "dracon.info.programDesc": "Scopri tutti gli appuntamenti e gli eventi speciali.",
+    "dracon.info.cta": "Vai al Programma",
+    "dracon.info.dateTime": "Data e Orario",
+    "dracon.info.dateTimeDesc": "11 e 12 Ottobre · dalle 10:00 alle 23:00",
+
+    "dracon.program.title": "Programma",
+    "dracon.program.subtitle": "Scopri cosa succede durante l’evento",
+    "dracon.program.viewAll": "Vai all’agenda completa",
+    "dracon.program.cta": "Vedi tutto",
+    
+    "dracon.program.day1.title": "Giorno 1",
+    "dracon.program.day1.date": "11 Ottobre",
+    "dracon.program.day2.title": "Giorno 2",
+    "dracon.program.day2.date": "12 Ottobre",
+
+    "dracon.program.slot.time": "Orario",
+    "dracon.program.slot.area": "Area",
+    "dracon.program.slot.location": "Luogo",
+    "dracon.program.slot.host": "A cura di",
+
+    "dracon.program.empty": "Il programma sarà pubblicato a breve",
+    "dracon.program.more": "…e molto altro!"
+    }
