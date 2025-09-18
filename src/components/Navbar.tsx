@@ -8,7 +8,7 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import { useAuth } from "@/context/AuthContext"
 import { UserRole } from "@/interfaces/UserRole"
-import { LanguageSwitcher } from "./ui/LanguageSwitcher"
+import { LanguageSwitcher } from "./LanguageSwitcher"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)

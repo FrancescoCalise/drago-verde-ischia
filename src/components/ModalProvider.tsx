@@ -6,7 +6,7 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { ModalContext } from "@/lib/modal"
-import { T } from "./T"
+import { T } from "./ui/T"
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)

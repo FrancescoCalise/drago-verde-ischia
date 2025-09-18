@@ -1,10 +1,16 @@
 "use client"
+
 import { useState } from "react"
-import { useAuth } from "@/context/AuthContext"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { toast } from "@/lib/toast"
+import { useRouter } from "next/navigation"
 import { httpFetchPublic } from "@/lib/http"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { T } from "@/components/ui/T"
+import { toast } from "@/lib/toast"
+import { useAuth } from "@/context/AuthContext"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
@@ -13,81 +19,95 @@ export default function LoginPage() {
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
-  e.preventDefault()
+    e.preventDefault()
+    toast.loading("Accesso in corso...")
 
-  toast.loading("Accesso in corso...")
+    try {
+      const res = await httpFetchPublic("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      })
 
-  try {
-    const res = await httpFetchPublic("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    })
+      const data = await res.json()
+      toast.dismiss()
 
-    const data = await res.json()
-    toast.dismiss()
+      if (!res.ok) {
+        toast.error(data.error || "❌ Errore durante il login")
+        return
+      }
 
-    if (!res.ok) {
-      toast.error(data.error || "❌ Errore durante il login")
-      return
-    }
-
-    if (data.accessToken) {
-    // salvo l’accessToken in localStorage
-    localStorage.setItem("accessToken", data.accessToken)
-
-    // aggiorno contesto utente (AuthContext usa useAuthToken)
-    login(data.user, data.accessToken)
-
-    toast.success("✅ Login effettuato con successo!")
-
-    // redirect alla home
-    router.push("/")
-  } else {
-    toast.error("❌ Nessun token ricevuto")
-  }
-  } catch (err: unknown) {
-    toast.dismiss()
-    if (err instanceof Error) {
-      toast.error("❌ Errore di connessione al server:" + err.message)
-      console.error("❌ Errore di connessione al server:", err.message)
-    } else {
-      toast.error("❌ Errore sconosciuto")
-      console.error("❌ Errore sconosciuto:", err)
+      if (data.accessToken) {
+        localStorage.setItem("accessToken", data.accessToken)
+        login(data.user, data.accessToken)
+        toast.success("✅ Login effettuato con successo!")
+        router.push("/")
+      } else {
+        toast.error("❌ Nessun token ricevuto")
+      }
+    } catch (err: unknown) {
+      toast.dismiss()
+      if (err instanceof Error) {
+        toast.error("❌ Errore di connessione: " + err.message)
+      } else {
+        toast.error("❌ Errore sconosciuto")
+      }
     }
   }
-}
 
   return (
-    <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-2xl mb-4">Login</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+      <Card className="w-full max-w-md shadow-lg border rounded-2xl">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold text-gray-800">
+            <T idml="login.title" defaultText="Accedi" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">
+                <T idml="login.username" defaultText="Username" />
+              </Label>
+              <Input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="username"
+                required
+              />
+            </div>
 
-      {/* Mostra errore se presente */}
+            <div className="space-y-2">
+              <Label htmlFor="password">
+                <T idml="login.password" defaultText="Password" />
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </div>
 
-      <form onSubmit={handleLogin} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="border w-full p-2"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border w-full p-2"
-        />
-        <button className="bg-green-600 text-white px-4 py-2 rounded w-full">
-          Accedi
-        </button>
-      </form>
+            <Button type="submit" className="w-full">
+              <T idml="login.button" defaultText="Accedi" />
+            </Button>
+          </form>
 
-      <div className="mt-4 flex justify-between">
-        <Link href="/register" className="text-blue-600">Registrati</Link>
-        <Link href="/forgot-password" className="text-blue-600">Password dimenticata?</Link>
-      </div>
+          <div className="mt-6 flex justify-between text-sm">
+            <Link href="/register" className="text-blue-600 hover:underline">
+              <T idml="login.register" defaultText="Registrati" />
+            </Link>
+            <Link href="/forgot-password" className="text-blue-600 hover:underline">
+              <T idml="login.forgot" defaultText="Password dimenticata?" />
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

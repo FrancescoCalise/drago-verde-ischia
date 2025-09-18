@@ -1,41 +1,38 @@
 import { NextResponse } from "next/server"
-import { supabase } from "@/lib/supabaseClient"
-import { hashPassword } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
 import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
 import { sendPasswordChangedEmail } from "@/lib/mailer"
 
-const JWT_SECRET = process.env.JWT_SECRET!
+const JWT_SECRET = process.env.JWT_SECRET as string
 
 export async function POST(req: Request) {
   const { token, password } = await req.json()
 
   try {
+    // Verifica token JWT
     const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string }
 
-    const hashedPassword = await hashPassword(password)
+    // Hash nuova password
+    const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Recupero utente
-    const { data: user, error: findError } = await supabase
-      .from("users")
-      .select("id, name, email")
-      .eq("id", decoded.id)
-      .single()
+    // Recupero utente da AppUser
+    const user = await prisma.appUser.findUnique({
+      where: { id: decoded.id },
+      select: { id: true, name: true, email: true },
+    })
 
-    if (findError || !user) {
+    if (!user) {
       return NextResponse.json({ error: "Utente non trovato" }, { status: 404 })
     }
 
     // Aggiorno la password
-    const { error: updateError } = await supabase
-      .from("users")
-      .update({ password: hashedPassword })
-      .eq("id", decoded.id)
+    await prisma.appUser.update({
+      where: { id: decoded.id },
+      data: { password: hashedPassword },
+    })
 
-    if (updateError) {
-      return NextResponse.json({ error: updateError.message }, { status: 400 })
-    }
-
-    // Invio email di conferma
+    // Invio email di conferma reset password
     try {
       await sendPasswordChangedEmail(user.email, user.name)
     } catch (mailErr) {
