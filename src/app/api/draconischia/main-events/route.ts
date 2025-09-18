@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAuth } from "@/lib/authMiddleware"
-import { MainEvent } from "@/generated/prisma"
 import { UserRole } from "@/interfaces/UserRole"
+import { MainEvent } from "@/generated/prisma"
 
 // Lista eventi
 export async function GET() {

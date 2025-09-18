@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model AppUser {
+  id           String    @id @default(uuid()) @db.Uuid
+  username     String    @unique
+  password     String
+  name         String
+  surname      String
+  birthdate    DateTime  @db.Date
+  email        String    @unique
+  role         String?   @default("guest")
+  phone_number String?
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+
+  // Relazioni
+  newsArticles            NewsArticle[]
+  GdrSessionRegistrations GdrSessionRegistration[]
+  mainEventRegistrations  MainEventRegistration[]
+}
+
+model GdrSession {
+  id             String    @id @default(uuid()) @db.Uuid
+  title          String
+  description    String
+  urlImg         String?
+  start          DateTime
+  end            DateTime
+  master         String
+  availableSeats Int
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+
+  gdrSessionRegistrations GdrSessionRegistration[]
+}
+
+model GdrSessionRegistration {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  sessionId String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user    AppUser    @relation(fields: [userId], references: [id])
+  session GdrSession @relation(fields: [sessionId], references: [id])
+
+  @@unique([userId, sessionId])
+}
+
+model MainEvent {
+  id          String    @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  urlImg      String?
+  start       DateTime
+  end         DateTime
+  location    String
+  price       Float     @default(0)
+  maxSeats    Int
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+  note        String
+
+  mainEventRegistrations MainEventRegistration[]
+}
+
+model MainEventRegistration {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  eventId   String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user  AppUser   @relation(fields: [userId], references: [id])
+  event MainEvent @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
+}
+
+model LoggerIDML {
+  id          String    @id @default(uuid())
+  IDML        String
+  description String
+  language    String
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@unique([IDML, language])
+}
+
+model NewsArticle {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  content     String   @db.Text
+  imageUrl    String?
+  publishedAt DateTime @default(now())
+
+  likes  NewsLike[]
+  shares Int        @default(0)
+
+  authorId String  @db.Uuid
+  author   AppUser @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NewsLike {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  articleId String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  article NewsArticle @relation(fields: [articleId], references: [id])
+
+  @@unique([userId, articleId])
+}
