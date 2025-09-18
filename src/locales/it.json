@@ -190,10 +190,13 @@
     "donation.title": "Sostieni Drago Verde Ischia",
     "donation.subtitle": "Ogni contributo ci aiuta a crescere e organizzare eventi per la community.",
     "donation.howto": "Come puoi aiutarci",
-    "donation.description": "Le donazioni ci permettono di acquistare nuovi giochi, organizzare tornei, eventi e migliorare la nostra sede. Puoi fare una donazione singola o sostenere il Drago Verde con un contributo ricorrente.",
+    "donation.description": "Le donazioni ci permettono di acquistare nuovi giochi, organizzare tornei, eventi e migliorare la nostra sede.",
     "donation.paypal.title": "Dona con PayPal",
     "donation.paypal.desc": "Un metodo sicuro e veloce per sostenerci.",
     "donation.paypal.button": "Dona con PayPal",
-    "donation.cta.title": "Aiutaci a rendere il gioco accessibile a tutti!",
-    "donation.cta.desc": "Ogni euro donato è un mattoncino per costruire eventi, amicizie e ricordi."
+    "donation.paypal.note": "La donazione sarà inviata a dragoverdeischia@gmail.com tramite PayPal.",
+    "donation.amount.custom": "Importo personalizzato",
+    "donation.cta.title": "Grazie per il tuo supporto!",
+    "donation.cta.desc": "Ogni euro è un tassello che ci aiuta a costruire nuovi eventi e momenti di gioco."
+
 }
