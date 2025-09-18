@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -102,7 +101,6 @@ model NewsArticle {
 
   likes       NewsLike[]
   shares      Int        @default(0)
-  _count  NewsArticleCountOutputType 
 
   authorId String   @db.Uuid
   author   AppUser  @relation(fields: [authorId], references: [id])
