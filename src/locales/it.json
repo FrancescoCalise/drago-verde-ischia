@@ -1,18 +1,57 @@
 {
   "login": {
     "title": "Accedi",
-    "username": "Nome utente",
+    "username": "Username",
     "password": "Password",
-    "submit": "Entra"
+    "submit": "Accedi",
+    "loading": "Accesso in corso...",
+    "success": "Login effettuato con successo!",
+    "error": "Errore durante il login",
+    "noToken": "Nessun token ricevuto",
+    "registerLink": "Registrati",
+    "forgotLink": "Password dimenticata?"
   },
+
   "register": {
-    "username": "Nome utente",
+    "title": "Registrazione",
+    "name": "Nome",
+    "surname": "Cognome",
+    "username": "Username",
+    "birthdate": "Data di nascita",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Conferma Password",
-    "submit": "Crea Account",
-    "title": "Registrati"
+    "phone": "Telefono",
+    "submit": "Registrati",
+    "loading": "Registrazione in corso...",
+    "success": "Registrazione completata! Ora puoi accedere.",
+    "error": "Errore durante la registrazione",
+    "errorConnection": "Errore di connessione al server",
+    "errorPasswords": "Le password non coincidono",
+    "errorEmail": "Email non valida",
+    "errorPhone": "Il numero di telefono deve contenere solo cifre"
   },
+
+  "forgot": {
+    "title": "Password dimenticata",
+    "username": "Username",
+    "email": "Email",
+    "submit": "Invia link di reset",
+    "sending": "Invio in corso...",
+    "success": "Se i dati sono corretti, ti abbiamo inviato un'email con il link per reimpostare la password.",
+    "error": "Errore nell'invio della richiesta",
+    "errorConnection": "Errore di connessione al server"
+  },
+  "reset": {
+    "title": "Reset Password",
+    "password": "Nuova password",
+    "confirmPassword": "Conferma password",
+    "submit": "Reimposta",
+    "success": "Password aggiornata con successo!",
+    "error": "Errore reset password",
+    "errorMismatch": "Le password non coincidono",
+    "errorConnection": "Errore di connessione al server"
+    },
   "manageEventPage": {
     "addSession": "Aggiungi Sessione",
     "editSession": "Modifica Sessione",

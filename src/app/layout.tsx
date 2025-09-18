@@ -3,10 +3,10 @@ import type { Metadata } from "next"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { AuthProvider } from "@/context/AuthContext"
-import { Toaster } from "react-hot-toast"
-import { ModalProvider } from "@/components/ui/ModalProvider"
-import GlobalSpinner from "@/components/ui/GolbalSpinner"
+import { ModalProvider } from "@/components/ModalProvider"
+import GlobalSpinner from "@/components/GolbalSpinner"
 import I18nProvider from "@/providers/I18nProvider"
+import { Toaster } from "sonner"
 
 export const metadata: Metadata = {
   title: "Drago Verde Ischia A.P.S.",
@@ -26,23 +26,7 @@ export default function RootLayout({
           <ModalProvider>
             <Navbar />
             <main className="flex-grow">{children}</main>
-            <Toaster
-              position="bottom-center"
-              toastOptions={{
-                style: {
-                  borderRadius: "12px",
-                  padding: "12px 16px",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                },
-                // Durata default
-                duration: 4000,
-              }}
-              containerStyle={{
-                bottom: 20,
-              }}
-              gutter={12}
-            />
+            <Toaster richColors position="bottom-center" />
             <Footer />
           <GlobalSpinner />
           </ModalProvider>
