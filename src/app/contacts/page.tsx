@@ -14,7 +14,7 @@ import { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "@/lib/toast";
 
-export default function ContattiPage() {
+export default function ContactsPage() {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [emailError, setEmailError] = useState("");
 

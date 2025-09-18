@@ -98,10 +98,102 @@
       "description": "Il festival del gioco e della cultura nerd che unisce l'isola d'Ischia. Giochi da tavolo, di ruolo, tornei, cosplay, conferenze e tanto altro.",
       "cta": "Scopri tutti i dettagli"
     },
+    "about": {
+      "hero": {
+        "title": "Chi Siamo",
+        "subtitle": "La storia, i valori e le persone dietro il Drago Verde",
+        "cta": "Unisciti a Noi"
+      },
+      "story": {
+        "title": "Nati dalla passione, cresciuti con la community",
+        "text": "L'associazione Drago Verde Ischia A.P.S. è nata nel 2022 dalla passione di un gruppo di amici per il gioco e la cultura geek..."
+      },
+      "mission": {
+        "title": "Il nostro obiettivo: unire, ispirare, creare",
+        "unite": "Unire le persone – favorire la socializzazione e creare legami duraturi.",
+        "inspire": "Ispirare la crescita – stimolare creatività, pensiero critico e immaginazione.",
+        "create": "Creare esperienze uniche – proporre eventi e tornei indimenticabili."
+      },
+      "values": {
+        "title": "I valori che ci guidano",
+        "collaboration": "Collaborazione",
+        "collaboration.text": "Crediamo nella forza del gruppo e nel valore di fare squadra.",
+        "passion": "Passione",
+        "passion.text": "Ogni attività nasce dall’amore per il gioco e la condivisione.",
+        "creativity": "Creatività",
+        "creativity.text": "Promuoviamo fantasia e innovazione in ogni esperienza di gioco."
+      },
+      "board": {
+        "title": "Il nostro direttivo"
+      },
+      "cta": {
+        "title": "Vuoi far parte della nostra storia?",
+        "text": "Unisciti al Drago Verde Ischia e diventa parte della nostra community!",
+        "button": "Entra nella community"
+      }
+    },
     "manageEventPage": {
       "addSession": "Aggiungi Sessione",
       "editSession": "Modifica Sessione",
       "addMainEvent": "Aggiungi Main Event",
       "editMainEvent": "Modifica Main Event"
-  }
+    },
+    "rollRole.hero.title": "Roll & Role",
+    "rollRole.hero.subtitle": "Serata dedicata al Gioco di Ruolo",
+    "rollRole.intro.title": "Entra in mondi fantastici",
+    "rollRole.intro.text": "Ogni Giovedì sera, dalle 21:00, la nostra community si riunisce per vivere avventure epiche attraverso i giochi di ruolo. Che tu sia un Dungeon Master esperto o un novizio curioso, troverai sempre un tavolo pronto ad accoglierti.",
+    "rollRole.howItWorks.title": "Come funziona",
+    "rollRole.howItWorks.step1": "Prenota il tuo posto online o in sede",
+    "rollRole.howItWorks.step2": "Unisciti a un gruppo già formato o proponi la tua sessione",
+    "rollRole.howItWorks.step3": "Gioca, divertiti e fai nuove amicizie",
+    "rollRole.callToAction.title": "Vuoi unirti alla prossima avventura?",
+    "rollRole.callToAction.text": "Non perdere l’occasione di vivere esperienze uniche e condividere la tua passione per i GDR con altri giocatori.",
+    "rollRole.callToAction.button": "Prenota il tuo posto",
+    "dragodi.hero.title": "DragoDì - Serata gioco libero",
+    "dragodi.hero.subtitle": "Ogni Venerdì dalle ore 21:00",
+    "dragodi.intro": "Il nostro appuntamento fisso per tutti gli appassionati. Vieni a scoprire nuovi giochi o porta il tuo preferito e condividilo con la community.",
+
+    "dragodi.section1.title": "Un venerdì diverso ogni settimana",
+    "dragodi.section1.desc": "Durante le serate DragoDì troverai sempre nuovi giochi da provare: dai boardgame classici alle ultime novità, giochi di carte, party game e molto altro. Una serata perfetta per incontrare vecchi amici e fare nuove conoscenze.",
+
+    "dragodi.section2.title": "Una community che cresce insieme",
+    "dragodi.section2.desc": "DragoDì non è solo una serata di gioco, è un punto di incontro per chi ama divertirsi, condividere e scoprire nuovi mondi. Che tu sia un esperto giocatore o un principiante, troverai sempre un tavolo pronto ad accoglierti.",
+    
+    "gameIsland.hero.title": "Game Island Forio",
+    "gameIsland.hero.subtitle": "Il festival del gioco che unisce l’isola d’Ischia!",
+    "gameIsland.hero.cta": "Scopri le edizioni passate",
+
+    "gameIsland.intro.title": "Due giorni di gioco, fantasia e community",
+    "gameIsland.intro.text": "Game Island Forio è l’evento annuale dedicato al mondo dei giochi da tavolo, di ruolo e della cultura nerd. Tornei, conferenze, cosplay e tanto divertimento per grandi e piccoli.",
+
+    "gameIsland.highlights.boardgames": "Giochi da Tavolo",
+    "gameIsland.highlights.boardgames.desc": "Scopri centinaia di titoli e partecipa a demo e tornei.",
+    "gameIsland.highlights.rpg": "Giochi di Ruolo",
+    "gameIsland.highlights.rpg.desc": "Unisciti a campagne epiche e vivi avventure uniche.",
+    "gameIsland.highlights.cosplay": "Cosplay & Cultura Nerd",
+    "gameIsland.highlights.cosplay.desc": "Partecipa alle sfilate, conferenze e agli incontri con ospiti speciali.",
+
+    "gameIsland.cta.title": "Rivivi le edizioni passate",
+    "gameIsland.cta.text": "Dai un’occhiata agli eventi degli anni precedenti e scopri cosa ti aspetta alla prossima edizione!",
+    "gameIsland.cta.button": "Vai alle edizioni precedenti",
+    
+    "fivepermille.title": "Dona il tuo 5×1000",
+    "fivepermille.subtitle": "Un gesto semplice che fa crescere la nostra community.",
+    "fivepermille.howto": "Come destinare il tuo 5×1000",
+    "fivepermille.description": "Nella tua dichiarazione dei redditi (730, CU o Modello Redditi), firma nel riquadro 'Sostegno agli enti del Terzo Settore' e inserisci il nostro codice fiscale.",
+    "fivepermille.taxcode": "Codice Fiscale: 91017100636",
+    "fivepermille.example": "Firma e inserisci il codice fiscale nell’apposito riquadro.",
+    "fivepermille.cta.title": "Sostieni il Drago Verde Ischia",
+    "fivepermille.cta.desc": "Con il tuo 5×1000 ci aiuti a organizzare eventi, tornei e attività che uniscono la community.",
+    "fivepermille.cta.button": "Contattaci per info",
+
+    "donation.title": "Sostieni Drago Verde Ischia",
+    "donation.subtitle": "Ogni contributo ci aiuta a crescere e organizzare eventi per la community.",
+    "donation.howto": "Come puoi aiutarci",
+    "donation.description": "Le donazioni ci permettono di acquistare nuovi giochi, organizzare tornei, eventi e migliorare la nostra sede. Puoi fare una donazione singola o sostenere il Drago Verde con un contributo ricorrente.",
+    "donation.paypal.title": "Dona con PayPal",
+    "donation.paypal.desc": "Un metodo sicuro e veloce per sostenerci.",
+    "donation.paypal.button": "Dona con PayPal",
+    "donation.cta.title": "Aiutaci a rendere il gioco accessibile a tutti!",
+    "donation.cta.desc": "Ogni euro donato è un mattoncino per costruire eventi, amicizie e ricordi."
 }

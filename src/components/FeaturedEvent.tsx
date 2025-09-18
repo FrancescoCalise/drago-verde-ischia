@@ -44,7 +44,7 @@ export default function FeaturedEvent() {
           </p>
 
           <Link
-            href="/eventi/dracon-ischia"
+            href="/draconischia"
             className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-500 transition font-semibold"
           >
             <T idml="featured.cta" defaultText="Scopri tutti i dettagli" />

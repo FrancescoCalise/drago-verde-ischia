@@ -1,62 +1,67 @@
-/* eslint-disable react/no-unescaped-entities */
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
+import HeroBanner from "@/components/HeroBanner"
+import { T } from "@/components/ui/T"
 
-export default function EventiPage() {
+export default function EventsPage() {
   const eventi = [
     {
       img: "/events/serata-giochi.jpg",
-      title: "DragoDì - Serata gioco libero",
-      date: "Ogni Venerdì dalle ore 21:00",
-      desc: "Il nostro appuntamento fisso per tutti gli appassionati. Vieni a provare i nostri giochi o porta il tuo preferito!",
+      titleId: "events.dragodi.title",
+      defaultTitle: "DragoDì - Serata gioco libero",
+      dateId: "events.dragodi.date",
+      defaultDate: "Ogni Venerdì dalle ore 21:00",
+      descId: "events.dragodi.desc",
+      defaultDesc: "Il nostro appuntamento fisso per tutti gli appassionati. Vieni a provare i nostri giochi o porta il tuo preferito!",
       link: "/events/dragodi",
-      cta: "Scopri di più",
+      ctaId: "events.dragodi.cta",
+      defaultCta: "Scopri di più",
     },
     {
       img: "/events/gdr.jpg",
-      title: "Roll & Role",
-      date: "Ogni Giovedi dalle ore 21:00",
-      desc: "Serata dedicata al gioco di ruolo.",
+      titleId: "events.roll.title",
+      defaultTitle: "Roll & Role",
+      dateId: "events.roll.date",
+      defaultDate: "Ogni Giovedi dalle ore 21:00",
+      descId: "events.roll.desc",
+      defaultDesc: "Serata dedicata al gioco di ruolo.",
       link: "/events/roll-and-role",
-      cta: "Dettagli evento",
+      ctaId: "events.roll.cta",
+      defaultCta: "Dettagli evento",
     },
     {
       img: "/events/game-island-forio.jpg",
-      title: "Game Island Forio",
-      date: "Non in programma per il 2025",
-      desc: "Il festival del gioco che unisce l'isola d'Ischia. Due giorni di tornei, incontri con autori e tanto divertimento.",
+      titleId: "events.gi.title",
+      defaultTitle: "Game Island Forio",
+      dateId: "events.gi.date",
+      defaultDate: "Non in programma per il 2025",
+      descId: "events.gi.desc",
+      defaultDesc: "Il festival del gioco che unisce l'isola d'Ischia. Due giorni di tornei, incontri con autori e tanto divertimento.",
       link: "/events/game-island-forio",
-      cta: "Tutti i dettagli delle edizioni passate",
-    }
+      ctaId: "events.gi.cta",
+      defaultCta: "Tutti i dettagli delle edizioni passate",
+    },
   ]
 
   return (
     <main className="flex flex-col">
-      {/* Header */}
-      <section className="relative w-full h-[40vh] md:h-[50vh] flex items-center justify-center text-center text-white overflow-hidden">
-        <Image
-          src="/heroes/hero3.jpg"
-          alt="Eventi Drago Verde Ischia"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-3xl p-6">
-          <h1 className="text-5xl md:text-6xl font-bold">I nostri eventi</h1>
-          <p className="mt-4 text-lg md:text-xl">
-            Il tuo calendario di gioco è qui. Non perderti nessun appuntamento!
-          </p>
-        </div>
-      </section>
+      {/* Hero */}
+      <HeroBanner
+        images={["/heroes/hero3.jpg"]}
+        title={<T idml="events.hero.title" defaultText="I nostri eventi" />}
+        subtitle={<T idml="events.hero.subtitle" defaultText="Il tuo calendario di gioco è qui. Non perderti nessun appuntamento!" />}
+        height="h-[40vh] md:h-[50vh]"
+      />
 
       {/* Intro */}
       <section className="max-w-5xl mx-auto px-6 py-16 text-center">
         <p className="text-lg text-gray-700 leading-relaxed">
-          Dalle nostre serate di gioco settimanali ai grandi tornei e festival annuali, 
-          l'associazione Drago Verde è sempre in movimento. Esplora il nostro calendario per scoprire i prossimi appuntamenti, 
-          le serate a tema e gli eventi speciali. Che tu sia un veterano o un novellino, 
-          c'è sempre un tavolo che ti aspetta.
+          <T
+            idml="events.intro"
+            defaultText="Dalle nostre serate di gioco settimanali ai grandi tornei e festival annuali, l'associazione Drago Verde è sempre in movimento. Esplora il nostro calendario per scoprire i prossimi appuntamenti, le serate a tema e gli eventi speciali. Che tu sia un veterano o un novellino, c'è sempre un tavolo che ti aspetta."
+          />
         </p>
       </section>
 
@@ -71,20 +76,26 @@ export default function EventiPage() {
               <div className="relative w-full h-48">
                 <Image
                   src={evento.img}
-                  alt={evento.title}
+                  alt={evento.defaultTitle}
                   fill
-                  className="object-cover"
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold mb-2">{evento.title}</h3>
-                <p className="text-sm text-gray-500 mb-2">{evento.date}</p>
-                <p className="text-gray-600 mb-4 flex-grow">{evento.desc}</p>
+                <h3 className="text-xl font-bold mb-2">
+                  <T idml={evento.titleId} defaultText={evento.defaultTitle} />
+                </h3>
+                <p className="text-sm text-gray-500 mb-2">
+                  <T idml={evento.dateId} defaultText={evento.defaultDate} />
+                </p>
+                <p className="text-gray-600 mb-4 flex-grow">
+                  <T idml={evento.descId} defaultText={evento.defaultDesc} />
+                </p>
                 <Link
                   href={evento.link}
                   className="mt-auto inline-block bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-500 text-center"
                 >
-                  {evento.cta}
+                  <T idml={evento.ctaId} defaultText={evento.defaultCta} />
                 </Link>
               </div>
             </div>

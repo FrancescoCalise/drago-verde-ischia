@@ -18,7 +18,7 @@ export default function AboutUs() {
             e tornei per unire la community nerd sull’isola.
           </p>
           <Link
-            href="/chi-siamo"
+            href="/about-us"
             className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-500 font-semibold"
           >
             Scopri di più

@@ -11,7 +11,7 @@ import { useMenuVisibility, MenuItemWithFlags } from "@/hooks/useMenuVisibility"
 import { checkIsAdmin } from "@/lib/userService"
 
 const MENU_ITEMS: MenuItemWithFlags[] = [
-  { idml: "nav.about", defaultText: "Chi Siamo", href: "/chi-siamo", visible: true },
+  { idml: "nav.about", defaultText: "Chi Siamo", href: "/about-us", visible: true },
   { idml: "nav.events", defaultText: "Eventi", href: "/events", visible: true },
   {
     idml: "nav.dracon", defaultText: "DraCon Ischia", visible: true,
@@ -33,11 +33,11 @@ const MENU_ITEMS: MenuItemWithFlags[] = [
     children: [
       { idml: "nav.support.5x1000", defaultText: "5×1000", href: "/support/5x1000", visible: true },
       { idml: "nav.support.donations", defaultText: "Donazioni", href: "/support/donation", visible: true },
-      { idml: "nav.support.membership", defaultText: "Tesseramento", href: "/support/subscription", visible: true }
+      { idml: "nav.support.membership", defaultText: "Tesseramento", href: "/support/subscription", visible: false, forcedVisible: true }
     ]
   },
   { idml: "nav.news", defaultText: "News", href: "/news", visible: true },
-  { idml: "nav.contacts", defaultText: "Contatti", href: "/contatti", visible: true }
+  { idml: "nav.contacts", defaultText: "Contatti", href: "/contacts", visible: true }
 ]
 
 export default function Navbar() {
