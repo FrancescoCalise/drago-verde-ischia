@@ -27,10 +27,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("user", JSON.stringify(user))
   }
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null)
     setAccessToken(null)
     localStorage.removeItem("user")
+    localStorage.removeItem("accessToken")
+
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // importante per mandare i cookie
+      })
+    } catch (err) {
+      console.error("Errore nel logout:", err)
+    }
   }
   
   const updateUser = (newUser: AppUser) => {

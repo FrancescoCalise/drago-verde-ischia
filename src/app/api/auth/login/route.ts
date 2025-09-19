@@ -28,18 +28,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Credenziali non valide" }, { status: 401 })
     }
 
-    // genera access e refresh token
+    // nuovo access e refresh
     const accessToken = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       JWT_SECRET,
       { expiresIn: "1h" }
     )
 
-    const refreshToken = jwt.sign(
-      { id: user.id, username: user.username },
-      REFRESH_SECRET,
-      { expiresIn: "7d" }
-    )
+    const newRefreshToken = jwt.sign({ id: user.id }, REFRESH_SECRET, { expiresIn: "7d" })
+
+    const res = NextResponse.json({ accessToken })
+
+    // aggiorno cookie refresh
+    res.cookies.set("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 giorni
+    })
 
     // set cookie httpOnly col refresh token
     const response = NextResponse.json({
@@ -54,7 +61,7 @@ export async function POST(req: Request) {
       },
     })
 
-    response.cookies.set("refreshToken", refreshToken, {
+    response.cookies.set("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
