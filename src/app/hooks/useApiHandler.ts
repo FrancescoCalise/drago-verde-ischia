@@ -12,7 +12,7 @@ export function useApiHandler() {
 
   const handleResponse = useCallback(<T>(
     res: ApiResponse<T>,
-    onSuccess?: (data: T | undefined) => void,
+    onSuccess?: ((data: T | undefined) => void) | null,
     redirectTo?: string
   ) => {
     const msg = t(res.idml, { defaultValue: res.message ?? "" })
