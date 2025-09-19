@@ -3,7 +3,7 @@
 
 import { AppUser } from "@/generated/prisma"
 import { NewsArticleExtend } from "@/interfaces/NewArticle"
-import { httpFetch } from "@/lib/http"
+import { httpFetch } from "@/services/http/httpFetch"
 import { showError } from "@/lib/toast"
 
 export async function toggleLikeRequest(
@@ -20,16 +20,14 @@ export async function toggleLikeRequest(
 
   try {
     const method = isLiked ? "DELETE" : "POST"
-    const res = await httpFetch(`/api/news/${articleId}/like`, { method })
+    const res = await httpFetch(`/api/news/${articleId}/like`, method, null, true)
 
-    if (res.ok) {
+    if (res.success) {
       return true
     } else {
-      showError("Errore nel mettere like")
       return false
     }
   } catch {
-    showError("Errore di connessione")
     return false
   }
 }

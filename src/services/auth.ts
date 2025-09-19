@@ -1,9 +1,10 @@
 import { jwtDecode } from "jwt-decode"
-import { httpFetchPublic } from "./http"
+import { httpFetch } from "@/services/http/httpFetch"
 
 let accessToken: string | null = null
 let refreshPromise: Promise<string | null> | null = null
 
+// ---- Token ----
 export function setAccessToken(token: string | null) {
   accessToken = token
   if (token) {
@@ -13,9 +14,11 @@ export function setAccessToken(token: string | null) {
   }
 }
 
-export const getAccessToken = () => accessToken
+export function getAccessToken(): string | null {
+  return accessToken ?? localStorage.getItem("accessToken")
+}
 
-const isTokenExpired = (token: string): boolean => {
+function isTokenExpired(token: string): boolean {
   try {
     const decoded = jwtDecode<{ exp: number }>(token)
     return decoded.exp * 1000 < Date.now()
@@ -24,24 +27,26 @@ const isTokenExpired = (token: string): boolean => {
   }
 }
 
-const refreshToken = async (): Promise<string | null> => {
+// ---- Refresh ----
+async function refreshToken(): Promise<string | null> {
   try {
-    const res = await httpFetchPublic("/api/auth/refresh", { method: "POST" })
-    if (!res.ok) return null
-    const data = await res.json()
-
+    const res = await httpFetch<{ accessToken?: string }>("/api/auth/refresh","POST", null,  false );
+    if(res.success && res.data){
+      const data = res.data
     if (data.accessToken) {
-      setAccessToken(data.accessToken) // salva in memoria e localStorage
+      setAccessToken(data.accessToken)
       return data.accessToken
     }
+  }
   } catch {
     return null
   }
+
   return null
 }
 
-
-export const getValidToken = async (): Promise<string | null> => {
+// ---- Valid token ----
+export async function getValidToken(): Promise<string | null> {
   if (!accessToken) {
     accessToken = localStorage.getItem("accessToken")
     if (!accessToken) return null
@@ -57,4 +62,14 @@ export const getValidToken = async (): Promise<string | null> => {
   }
 
   return accessToken
+}
+
+// ---- Logout ----
+export async function logoutService() {
+  try {
+    await httpFetch("/api/auth/logout", "POST", null, false)
+  } finally {
+    setAccessToken(null)
+    localStorage.removeItem("user")
+  }
 }

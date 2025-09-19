@@ -2,12 +2,13 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { T } from "@/components/ui/T"
-import { NewsArticleExtend } from "@/interfaces/NewArticle"
+import { NewArticleResponse, NewsArticleExtend } from "@/interfaces/NewArticle"
 import LikeArticle from "./LikeArticle"
 import { updateCurrentLike } from "@/app/news/utils"
-import { httpFetchPublic } from "@/lib/http"
+import { httpFetch } from "@/services/http/httpFetch"
+import { useApiHandler } from "@/app/hooks/useApiHandler"
 
 interface LastNewsProps {
   numberOfArticles?: number
@@ -15,20 +16,25 @@ interface LastNewsProps {
 
 export default function LastNews({ numberOfArticles = 3 }: LastNewsProps) {
   const [articles, setArticles] = useState<NewsArticleExtend[]>([])
+  const { handleResponse } = useApiHandler()
+
+  const fetchArticle = useCallback(async () => {
+      const res = await httpFetch<NewArticleResponse>(
+        `/api/news?limit=${numberOfArticles}`,
+        "GET",
+        null,
+        false
+      )
+  
+      handleResponse(res, () => {
+        const data = res.data as NewArticleResponse
+        setArticles(data.articles)
+      })
+  }, [numberOfArticles, handleResponse])
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const res = await httpFetchPublic(`/api/news?limit=${numberOfArticles}`)
-        if (!res.ok) return
-        const data = await res.json()
-        setArticles(data.articles || [])
-      } catch (err) {
-        console.error("Errore caricamento articoli:", err)
-      }
-    }
-    fetchArticles()
-  }, [numberOfArticles])
+    fetchArticle();
+  }, [fetchArticle]);
 
   return (
     <section className="py-16 bg-white">

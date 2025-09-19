@@ -1,49 +1,47 @@
-import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
-import { DecodedUser, requireAuth } from "@/lib/authMiddleware";
+import { DecodedUser, requireAuth } from "@/lib/authMiddleware"
+import { successResponse, errorResponse } from "@/lib/apiResponse"
+import { trackError } from "@/services/errorTracker"
 
 export async function DELETE(req: Request) {
   try {
-    const auth = await requireAuth(req);
-
-    if (!auth.ok) return new Response(JSON.stringify({ error: "Non autenticato" }), { status: 401 });
-    const currentUser = auth.user as DecodedUser;
+    const auth = await requireAuth(req)
+    if (!auth.ok) return auth.response
+    const currentUser = auth.user as DecodedUser
 
     if (!currentUser?.id) {
-      return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
+      return errorResponse("user.unauthorized", "Non autorizzato", 401)
     }
 
-    const userId = currentUser.id;
-
-    // Recupera l'utente
     const user = await prisma.appUser.findUnique({
-      where: { id: userId },
+      where: { id: currentUser.id },
     })
 
     if (!user) {
-      return NextResponse.json({ error: "Utente non trovato" }, { status: 404 })
+      return errorResponse("user.not_found", "Utente non trovato", 404)
     }
-    const role = user.role || "";
 
-    // Controlla che sia guest
-    if (role.toLowerCase() !== "guest") {
-      return NextResponse.json(
-        { error: "Solo i guest possono eliminare l'account" },
-        { status: 403 }
+    // 🔹 Solo i guest possono eliminare l’account
+    if ((user.role || "").toLowerCase() !== "guest") {
+      return errorResponse(
+        "user.delete_not_allowed",
+        "Solo gli utenti guest possono eliminare l'account",
+        403
       )
     }
 
-    // Elimina l'utente
     await prisma.appUser.delete({
-      where: { id: userId },
+      where: { id: currentUser.id },
     })
 
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("Errore eliminazione account:", error)
-    return NextResponse.json(
-      { error: "Errore interno del server" },
-      { status: 500 }
+    return successResponse(
+      null,
+      "user.delete_success",
+      "Account eliminato con successo",
+      200
     )
+  } catch (err) {
+    trackError(err, "DELETE /api/user/delete-account")
+    return errorResponse("user.delete_error", "Errore durante l'eliminazione dell'account", 500)
   }
 }

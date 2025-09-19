@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react"
 import { useAuth } from "@/context/AuthContext"
 import { showError, showSuccess, showInfo } from "@/lib/toast"
-import { httpFetch } from "@/lib/http"
 import { MainEvent } from "@/interfaces/MainEvent"
 import { getOnlyDate, getOnlyTime } from "@/lib/manageDataUtils"
+import { httpFetch } from "@/services/http/httpFetch"
 
 export default function MainEventPage() {
   const [events, setEvents] = useState<MainEvent[]>([])
@@ -13,12 +13,11 @@ export default function MainEventPage() {
 
   const fetchEvents = async () => {
     try {
-      const res = await httpFetch("/api/draconischia/main-events", { method: "GET" })
-      if (!res.ok) throw new Error("Errore caricamento eventi")
-      const data = await res.json()
-      setEvents(data)
+      const res = await httpFetch("/api/draconischia/main-events", "GET", null, false)
+      if(res.success && res.data){
+        setEvents(res.data as MainEvent[])
+      }
     } catch {
-      showError("❌ Errore nel recupero dei Main Event")
     }
   }
 
@@ -31,19 +30,16 @@ export default function MainEventPage() {
       showInfo("Effettua il login per iscriverti")
       return
     }
-    const res = await httpFetch(`/api/draconischia/main-events/${id}/register`, { method: "POST" })
-    if (res.ok) {
+    const res = await httpFetch(`/api/draconischia/main-events/${id}/register`, "POST", null, true)
+    if (res.success) {
       showSuccess("✅ Iscrizione completata")
       fetchEvents()
-    } else {
-      const data = await res.json()
-      showError(data.error || "Errore iscrizione")
     }
   }
 
   const handleUnregister = async (id: string) => {
-    const res = await httpFetch(`/api/draconischia/main-events/${id}/register`, { method: "DELETE" })
-    if (res.ok) {
+    const res = await httpFetch(`/api/draconischia/main-events/${id}/register`, "DELETE", null, true)
+    if (res.success) {
       showSuccess("✅ Iscrizione cancellata")
       fetchEvents()
     } else {

@@ -2,57 +2,29 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { httpFetchPublic } from "@/lib/http"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { T } from "@/components/ui/T"
-import { toast } from "@/lib/toast"
 import { useAuth } from "@/context/AuthContext"
 import { ResponsiveCard } from "@/components/ui/custom/ResponsiveCard"
+import { httpFetch } from "@/services/http/httpFetch"
+import { AppUser } from "@/generated/prisma"
+import { useApiHandler } from "@/app/hooks/useApiHandler"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const { login } = useAuth()
-  const router = useRouter()
-
+  const { handleResponse } = useApiHandler()
+  
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    toast.loading("Accesso in corso...")
-
-    try {
-      const res = await httpFetchPublic("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      })
-
-      const data = await res.json()
-      toast.dismiss()
-
-      if (!res.ok) {
-        toast.error(data.error || "❌ Errore durante il login")
-        return
-      }
-
-      if (data.accessToken) {
-        localStorage.setItem("accessToken", data.accessToken)
-        login(data.user, data.accessToken)
-        toast.success("✅ Login effettuato con successo!")
-        router.push("/")
-      } else {
-        toast.error("❌ Nessun token ricevuto")
-      }
-    } catch (err: unknown) {
-      toast.dismiss()
-      if (err instanceof Error) {
-        toast.error("❌ Errore di connessione: " + err.message)
-      } else {
-        toast.error("❌ Errore sconosciuto")
-      }
-    }
+    const res = await httpFetch<{ accessToken: string, user: AppUser }>("/api/auth/login","POST", { username, password }, false);
+    handleResponse(res, () => { 
+      if(res.data)
+        login(res.data.user, res.data.accessToken)
+     }, "/");
   }
 
   return (

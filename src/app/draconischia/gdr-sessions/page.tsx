@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { showError, showInfo, showSuccess } from "@/lib/toast"
+import { showInfo, showSuccess } from "@/lib/toast"
 import { useAuth } from "@/context/AuthContext"
-import { httpFetch, httpFetchPublic } from "@/lib/http"
 import { GdrSession } from "@/interfaces/GdrSession"
 import { getOnlyDate, getOnlyTime } from "@/lib/manageDataUtils"
+import { httpFetch } from "@/services/http/httpFetch"
+import { GdrSessionRegistration } from "@/generated/prisma"
 
 
 export default function SessioniGdrPage() {
@@ -17,13 +18,12 @@ export default function SessioniGdrPage() {
 
   const fetchSessions = async () => {
       try {
-        const res = await httpFetchPublic("/api/draconischia/gdr-sessions")
-        if (!res.ok) return
-        const data = await res.json()
-        setSessions(data || [])
-      } catch (err) {
-        console.error(err)
-        showError("Errore nel caricamento delle sessioni")
+        const res = await httpFetch<GdrSession[]>("/api/draconischia/gdr-sessions", "GET", null, false)
+          if (res && res.success && res.data) {
+            const data = res.data;
+            setSessions(data || [])
+       }
+      } catch {
       } finally {
         setLoading(false)
       }
@@ -41,19 +41,12 @@ export default function SessioniGdrPage() {
     }
 
     try {
-      const res = await httpFetch(`/api/draconischia/gdr-sessions/${id}/gdrSessionRegistration`, {
-        method: "POST",
-      })
-
-      if (res.ok) {
+      const res = await httpFetch<GdrSessionRegistration>(`/api/draconischia/gdr-sessions/${id}/gdrSessionRegistration`,"POST", null,true)
+      if (res && res.success) {
         showSuccess("✅ Iscrizione completata!")
         fetchSessions()
-      } else {
-        const data = await res.json()
-        showError(data.error || "❌ Errore iscrizione")
-      }
-    } catch (err) {
-      showError((err as Error).message || "❌ Errore iscrizione")
+      } 
+    } catch  {
     }
   }
 
@@ -65,19 +58,13 @@ export default function SessioniGdrPage() {
     }
 
     try {
-      const res = await httpFetch(`/api/draconischia/gdr-sessions/${id}/gdrSessionRegistration`, {
-        method: "DELETE",
-      })
+      const res = await httpFetch<GdrSessionRegistration>(`/api/draconischia/gdr-sessions/${id}/gdrSessionRegistration`,"DELETE",null,true)
 
-      if (res.ok) {
+      if (res) {
         showSuccess("✅ Iscrizione cancellata!")
         fetchSessions()
-      } else {
-        const data = await res.json()
-        showError(data.error || "❌ Errore durante la cancellazione")
-      }
-    } catch (err) {
-      showError((err as Error).message || "❌ Errore connessione server")
+      } 
+    } catch  {
     }
   }
 

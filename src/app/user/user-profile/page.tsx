@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { T } from "@/components/ui/T";
 import { toast } from "@/lib/toast";
-import { httpFetch } from "@/lib/http";
+import { httpFetch } from "@/services/http/httpFetch";
 
 export default function UserProfile() {
   const { user, logout, updateUser, loading } = useAuth();
@@ -24,45 +24,30 @@ export default function UserProfile() {
 
   if (!user) return null;
 
+  const body = JSON.stringify({ newEmail });
   const handleChangeEmail = async () => {
     try {
-      const res = await httpFetch("/api/user/change-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newEmail }),
-      });
-
-      if (res.ok) {
-        toast.success(
-          "📧 Ti abbiamo inviato un'email di conferma al nuovo indirizzo"
+      const res = await httpFetch("/api/user/change-email", "POST", body, true);
+    
+      if (res.success) {
+        toast.success("📧 Ti abbiamo inviato un'email di conferma al nuovo indirizzo"
         );
         updateUser({ ...user!, email: newEmail });
-      } else {
-        const data = await res.json();
-        toast.error(data.error || "❌ Errore nel cambio email");
-      }
+      } 
     } catch {
-      toast.error("❌ Impossibile aggiornare l'email");
     }
   };
 
   const handleChangePassword = async () => {
     try {
-      const res = await httpFetch("/api/user/change-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newPassword }),
-      });
+      const body = JSON.stringify({ newPassword });
 
-      if (res.ok) {
+      const res = await httpFetch("/api/user/change-password", "POST", body, true);
+      if (res.success) {
         toast.success("🔑 Password aggiornata con successo!");
         setNewPassword("");
-      } else {
-        const data = await res.json();
-        toast.error(data.error || "❌ Errore nel cambio password");
-      }
+      } 
     } catch {
-      toast.error("❌ Impossibile aggiornare la password");
     }
   };
 
@@ -73,22 +58,13 @@ export default function UserProfile() {
   }
 
   try {
-    const res = await httpFetch(`/api/user/${user.id}`, {
-      method: "DELETE",
-    })
+    const res = await httpFetch(`/api/user/${user.id}`, "DELETE");
 
-    if (res.ok) {
+    if (res.success) {
       toast.success("✅ Account eliminato con successo")
       await logout()
-      router.push("/") // redirect alla home
-    } else {
-      const data = await res.json()
-      toast.error(data.error || "❌ Errore nell'eliminazione dell'account")
-    }
-  } catch (error) {
-    console.error("Errore eliminazione account:", error)
-    toast.error("❌ Impossibile eliminare l'account, riprova più tardi")
-  }
+    } 
+  }catch {} 
 }
 
   return (

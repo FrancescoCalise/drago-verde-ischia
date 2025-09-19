@@ -16,7 +16,7 @@ export default function AboutUsPage() {
         subtitle={<T idml="about.hero.subtitle" defaultText="La storia, i valori e le persone dietro il Drago Verde" />}
         primaryCta={{
           label: <T idml="about.hero.cta" defaultText="Unisciti a Noi" />,
-          href: "/register",
+          href: "/user/register",
         }}
         height="h-[40vh] md:h-[50vh]"
       />
@@ -111,7 +111,7 @@ export default function AboutUsPage() {
           <T idml="about.cta.text" defaultText="Unisciti al Drago Verde Ischia e diventa parte della nostra community!" />
         </p>
         <Link
-          href="/register"
+          href="/user/register"
           className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100"
         >
           <T idml="about.cta.button" defaultText="Entra nella community" />

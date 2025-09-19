@@ -1,19 +1,33 @@
-import { httpFetchPublic } from "@/lib/http"
-import { NextResponse } from "next/server"
 import nodemailer from "nodemailer"
+import { httpFetch } from "@/services/http/httpFetch"
+import { successResponse, errorResponse } from "@/lib/apiResponse"
+import { trackError } from "@/services/errorTracker"
+
+interface RecaptchaResponse {
+  success: boolean
+  challenge_ts: string
+  hostname: string
+  score?: number
+  action?: string
+}
 
 export async function POST(req: Request) {
   try {
     const { name, email, subject, message, token } = await req.json()
 
-    const captchaRes = await httpFetchPublic("https://www.google.com/recaptcha/api/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
-    })
-    const captchaData = await captchaRes.json()
-    if (!captchaData.success) {
-      return NextResponse.json({ error: "Captcha non valido" }, { status: 400 })
+    // 🔹 Verifica reCAPTCHA
+    const captchaRes = await httpFetch<RecaptchaResponse>(
+      "https://www.google.com/recaptcha/api/siteverify",
+      "POST",
+      `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`, // body raw string
+      false,
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }
+    )
+
+    if (!captchaRes.success) {
+      return errorResponse("contact.invalid_captcha", "Captcha non valido", 400)
     }
 
     // 🔹 Configura SMTP
@@ -53,9 +67,9 @@ export async function POST(req: Request) {
       `,
     })
 
-    return NextResponse.json({ success: true })
+    return successResponse(null, "contact.sent_success", "Messaggio inviato con successo", 200)
   } catch (err) {
-    console.error("Errore invio email:", err)
-    return NextResponse.json({ error: "Errore invio email" }, { status: 500 })
+    trackError(err, "POST /api/contact")
+    return errorResponse("contact.send_error", "Errore durante l'invio del messaggio", 500)
   }
 }

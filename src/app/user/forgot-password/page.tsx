@@ -1,54 +1,23 @@
 "use client"
 
 import { useState } from "react"
-import { toast } from "@/lib/toast"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { T } from "@/components/ui/T"
 import { ResponsiveCard } from "@/components/ui/custom/ResponsiveCard"
+import { httpFetch } from "@/services/http/httpFetch"
+import { useApiHandler } from "@/app/hooks/useApiHandler"
 
 export default function ForgotPasswordPage() {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { handleResponse } = useApiHandler()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (isSubmitting) return
-
-    setIsSubmitting(true)
-    toast.loading("Invio richiesta...")
-
-    try {
-      const res = await fetch("/api/auth/forgot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email }),
-      })
-
-      const data = await res.json()
-      toast.dismiss()
-
-      if (!res.ok) {
-        toast.error(data.error || "❌ Errore nell'invio della richiesta")
-      } else {
-        toast.success(
-          "✅ Se i dati sono corretti, ti abbiamo inviato un'email con il link per reimpostare la password."
-        )
-      }
-    } catch (err: unknown) {
-      toast.dismiss()
-      if (err instanceof Error) {
-        toast.error("Errore invio richiesta reset password:" + err.message)
-        console.error("Errore invio richiesta reset password:", err.message)
-      } else {
-        toast.error("Errore sconosciuto")
-        console.error("Errore sconosciuto:", err)
-      }
-    } finally {
-      setIsSubmitting(false)
-    }
+    const res = await httpFetch("/api/auth/forgot-password", "POST", { username, email }, false);
+    handleResponse(res, null, "/user/login");   
   }
 
   return (
@@ -90,12 +59,8 @@ export default function ForgotPasswordPage() {
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <T idml="forgot.sending" defaultText="Invio in corso..." />
-            ) : (
-              <T idml="forgot.submit" defaultText="Invia link di reset" />
-            )}
+          <Button type="submit" className="w-full" > 
+            <T idml="forgot.submit" defaultText="Invia link di reset" />
           </Button>
         </form>
       </ResponsiveCard.Content>
@@ -103,3 +68,4 @@ export default function ForgotPasswordPage() {
 )
 
 }
+

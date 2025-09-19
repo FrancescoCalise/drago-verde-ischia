@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { showError, showInfo, showSuccess } from "@/lib/toast";
-import { httpFetch } from "@/lib/http";
 import SessionForm from "@/components/forms/SessionForm";
 import MainEventForm from "@/components/forms/MainEventForm";
 import { GdrSession } from "@/interfaces/GdrSession";
@@ -14,6 +13,7 @@ import { getOnlyDate, getOnlyTime } from "@/lib/manageDataUtils";
 import { UserRole } from "@/interfaces/UserRole";
 import * as React from "react";
 import { useModal } from "@/lib/modal";
+import { httpFetch } from "@/services/http/httpFetch";
 
 interface ManageSectionProps<T extends { id?: string }> {
   title: string;
@@ -132,15 +132,14 @@ export default function ManageEventPage() {
   const fetchData = async () => {
     try {
       const [sRes, eRes] = await Promise.all([
-        httpFetch("/api/draconischia/gdr-sessions"),
-        httpFetch("/api/draconischia/main-events"),
+        httpFetch<GdrSession[]>("/api/draconischia/gdr-sessions", "GET", null, false),
+        httpFetch<MainEvent[]>("/api/draconischia/main-events", "GET", null, false),
       ]);
-      if (!sRes.ok || !eRes.ok) throw new Error("Errore caricamento dati");
-      const [sData, eData] = await Promise.all([sRes.json(), eRes.json()]);
-      setSessions(sData);
-      setEvents(eData);
-    } catch (err) {
-      showError((err as Error).message || "Errore nel caricamento dei dati");
+      if (!sRes.success || !eRes.success) throw new Error("Errore caricamento dati");
+      const [sData, eData] = await Promise.all([sRes.data, eRes.data]);
+      if(sData) setSessions(sData);
+      if(eData) setEvents(eData);
+    } catch  {
     }
   };
 
@@ -156,17 +155,12 @@ export default function ManageEventPage() {
           ? `/api/draconischia/gdr-sessions/${id}`
           : `/api/draconischia/main-events/${id}`;
 
-      const res = await httpFetch(url, { method: "DELETE" });
-      if (res.ok) {
+      const res = await httpFetch(url, "DELETE", null, true);
+      if (res.success) {
         showSuccess("✅ Eliminato con successo");
         fetchData();
-      } else {
-        const data = await res.json();
-        showError(data.error || "Errore durante eliminazione");
-      }
-    } catch (err) {
-      console.error((err as Error).message);
-      showError("Errore connessione al server");
+      } 
+    } catch{
     }
   };
 

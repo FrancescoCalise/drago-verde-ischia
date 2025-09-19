@@ -23,7 +23,7 @@ export default function RollAndRolePage() {
         }
         primaryCta={{
           label: <T idml="rollRole.hero.cta" defaultText="Partecipa alla prossima sessione" />,
-          href: "/register",
+          href: "/user/registerr",
         }}
         height="h-[40vh] md:h-[50vh]"
       />
@@ -99,7 +99,7 @@ export default function RollAndRolePage() {
           />
         </p>
         <Link
-          href="/register"
+          href="/user/register"
           className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100"
         >
           <T idml="rollRole.cta.button" defaultText="Unisciti ora" />

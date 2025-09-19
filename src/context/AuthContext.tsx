@@ -1,9 +1,10 @@
 "use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from "react"
-import {  AuthContextType } from "@/interfaces/AppUser"
-import { setAccessToken, getValidToken } from "@/lib/authToken" 
+import { AuthContextType } from "@/interfaces/AppUser"
+import { logoutService, setAccessToken } from "@/services/auth"
 import { AppUser } from "@/generated/prisma"
 import { hideSpinner, showSpinner } from "@/lib/spinner"
+import { useRouter } from "next/navigation"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -12,15 +13,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    showSpinner();
+    showSpinner()
     const stored = localStorage.getItem("user")
     if (stored) {
       setUser(JSON.parse(stored))
     }
     setLoading(false)
-    hideSpinner();
+    hideSpinner()
   }, [])
-
+  const router = useRouter() 
   const login = (user: AppUser, token: string) => {
     setUser(user)
     setAccessToken(token)
@@ -28,28 +29,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = async () => {
+    await logoutService()
     setUser(null)
-    setAccessToken(null)
-    localStorage.removeItem("user")
-    localStorage.removeItem("accessToken")
-
-    try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include", // importante per mandare i cookie
-      })
-    } catch (err) {
-      console.error("Errore nel logout:", err)
-    }
+    router.push("/") 
   }
-  
+
   const updateUser = (newUser: AppUser) => {
     setUser(newUser)
     localStorage.setItem("user", JSON.stringify(newUser))
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, getValidToken, loading, updateUser }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

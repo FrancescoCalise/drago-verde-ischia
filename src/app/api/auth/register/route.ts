@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server"
-import prisma from "@/lib/prisma"
-import { hashPassword } from "@/lib/auth"
+import { hashPassword } from "@/lib/authUtils"
 import { sendWelcomeEmail } from "@/lib/mailer"
+import { successResponse } from "@/lib/apiResponse"
+import { trackError } from "@/services/errorTracker"
+import prisma from "@/lib/prisma"
+import { mapPrismaError } from "@/services/WrapperPrismaErrorHandler"
 
 export async function POST(req: Request) {
   try {
@@ -10,8 +12,8 @@ export async function POST(req: Request) {
 
     // Hash della password
     const hashedPassword = await hashPassword(password)
-    
-    // Creazione utente su Prisma
+
+    // Creazione utente
     const user = await prisma.appUser.create({
       data: {
         username,
@@ -25,22 +27,22 @@ export async function POST(req: Request) {
       },
     })
 
-    // Invio email di benvenuto
+    // Invio email di benvenuto (non blocca la registrazione)
     try {
       await sendWelcomeEmail(user.email, user.username, user.name)
     } catch (mailErr) {
-      console.error("Errore invio email:", mailErr)
+      trackError(mailErr, "POST /api/auth/register - sendWelcomeEmail")
+      // non ritorniamo errore, perché l’utente è già creato
     }
 
-    return NextResponse.json(
-      { message: "User registered successfully", username: user.username },
-      { status: 201 }
+    return successResponse(
+      { username: user.username },
+      "auth.register_success",
+      "Registrazione completata con successo",
+      201
     )
-  } catch (err: unknown) {
-    console.error("Errore registrazione utente:", err)
-    return NextResponse.json(
-      { error: (err as Error).message || "Errore nella registrazione" },
-      { status: 500 }
-    )
+  } catch (err) {
+    return mapPrismaError(err, "POST /api/auth/register")
   }
 }
+

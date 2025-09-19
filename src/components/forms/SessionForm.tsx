@@ -6,8 +6,8 @@ import { useModal } from "@/lib/modal"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { it } from "date-fns/locale"
-import { httpFetch } from "@/lib/http"
 import { GdrSession } from "@/interfaces/GdrSession"
+import { httpFetch } from "@/services/http/httpFetch"
 
 interface SessionFormProps {
   onSuccess?: () => void
@@ -64,27 +64,17 @@ export default function SessionForm({ onSuccess, session }: SessionFormProps) {
     }
 
     try {
-      const res = await httpFetch(
-        session ? `/api/draconischia/gdr-sessions/${session.id}` : "/api/draconischia/gdr-sessions",
-        {
-          method: session ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      )
+      const method = session ? "PUT" : "POST"
+      const url = session ? `/api/draconischia/gdr-sessions/${session.id}` : "/api/draconischia/gdr-sessions"
+      const body = JSON.stringify(payload);
 
-      const data = await res.json().catch(() => ({}))
-
-      if (res.ok) {
+      const res = await httpFetch( url, method, body, true) 
+      if (res.success) {
         toast.success(session ? "✅ Sessione aggiornata!" : "✅ Sessione creata!")
         closeModal()
         onSuccess?.() 
-      } else {
-        toast.error(data.error || "❌ Errore creazione sessione")
-      }
-    } catch (err) {
-      toast.dismiss()
-      toast.error((err as Error).message || "❌ Errore creazione sessione")
+      } 
+    } catch  {
     }
   }
 

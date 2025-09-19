@@ -1,55 +1,78 @@
 // src/app/api/draconischia/gdr-sessions/route.ts
-import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
-import {  requireAuth } from "@/lib/authMiddleware"
+import { requireAuth } from "@/lib/authMiddleware"
 import { UserRole } from "@/interfaces/UserRole"
+import { successResponse, errorResponse } from "@/lib/apiResponse"
+import { trackError } from "@/services/errorTracker"
+
 export const runtime = "nodejs"
 
 export async function GET() {
   try {
     const sessions = await prisma.gdrSession.findMany({
       orderBy: { start: "asc" },
-      include: { 
+      include: {
         gdrSessionRegistrations: true,
-        _count: {
-        select: { gdrSessionRegistrations: true },
-      } 
+        _count: { select: { gdrSessionRegistrations: true } },
       },
     })
-    return NextResponse.json(sessions, { status: 200 })
+
+    return successResponse(
+      sessions,
+      "gdr_sessions.fetch_success",
+      "Sessioni GDR recuperate con successo",
+      200
+    )
   } catch (err) {
-    console.error("Errore fetch sessioni:", err)
-    return NextResponse.json({ error: "Errore nel recupero sessioni" }, { status: 500 })
+    trackError(err, "GET /api/draconischia/gdr-sessions")
+    return errorResponse("gdr_sessions.fetch_error", "Errore durante il recupero delle sessioni GDR", 500)
   }
 }
 
 export async function POST(req: Request) {
   try {
     const auth = await requireAuth(req, [UserRole.ADMIN])
+    if (!auth.ok) return auth.response
 
-    if (!auth.ok) return auth.response;
+    const { title, description, urlImg, start, end, master, availableSeats } =
+      await req.json()
 
-    const body = await req.json()
-    const { title, description, urlImg, start, end, master, availableSeats } = body
-
-    // Validazioni server
+    // 🔹 Validazioni
     if (!title || !description || !start || !end || !master) {
-      return NextResponse.json({ error: "Campi obbligatori mancanti" }, { status: 400 })
+      return errorResponse(
+        "gdr_sessions.missing_fields",
+        "Campi obbligatori mancanti",
+        400
+      )
     }
+
     const startDt = new Date(start)
     const endDt = new Date(end)
     if (isNaN(startDt.getTime()) || isNaN(endDt.getTime())) {
-      return NextResponse.json({ error: "Date non valide" }, { status: 400 })
+      return errorResponse(
+        "gdr_sessions.invalid_dates",
+        "Date non valide",
+        400
+      )
     }
     if (endDt <= startDt) {
-      return NextResponse.json({ error: "L'ora di fine deve essere successiva all'inizio" }, { status: 400 })
-    }
-    const seats = Number(availableSeats)
-    if (!Number.isInteger(seats) || seats < 1) {
-      return NextResponse.json({ error: "Posti disponibili non validi" }, { status: 400 })
+      return errorResponse(
+        "gdr_sessions.invalid_time_range",
+        "L'ora di fine deve essere successiva all'inizio",
+        400
+      )
     }
 
-    // Create con Prisma
+    const seats = Number(availableSeats)
+    if (!Number.isInteger(seats) || seats < 1) {
+      return errorResponse(
+        "gdr_sessions.invalid_seats",
+        "Posti disponibili non validi",
+        400
+      )
+    }
+
+    // 🔹 Creazione
     const created = await prisma.gdrSession.create({
       data: {
         title: String(title).trim(),
@@ -62,10 +85,14 @@ export async function POST(req: Request) {
       },
     })
 
-    return NextResponse.json(created, { status: 201 })
-  } catch (err: unknown) {
-    console.error("Errore creazione sessione:", err)
-    const message = err instanceof Error ? err.message : "Errore server"
-    return NextResponse.json({ error: message }, { status: 500 })
+    return successResponse(
+      created,
+      "gdr_sessions.create_success",
+      "Sessione GDR creata con successo",
+      201
+    )
+  } catch (err) {
+    trackError(err, "POST /api/draconischia/gdr-sessions")
+    return errorResponse("gdr_sessions.create_error", "Errore durante la creazione della sessione GDR", 500)
   }
 }

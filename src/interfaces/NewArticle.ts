@@ -6,3 +6,8 @@ export interface NewsArticleExtend extends NewsArticle {
   _count: { likes: number }
   author?: { id: string; name: string; surname: string }
 }
+
+export interface NewArticleResponse {
+  articles: NewsArticleExtend[]
+  totalPages: number
+}

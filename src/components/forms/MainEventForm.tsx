@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "@/lib/toast"
-import { httpFetch } from "@/lib/http"
 import { useModal } from "@/lib/modal"
 import { MainEvent } from "@/interfaces/MainEvent"
 import DatePicker from "react-datepicker"
 import { it } from "date-fns/locale"
 import "react-datepicker/dist/react-datepicker.css"
+import { httpFetch } from "@/services/http/httpFetch"
 
 interface Props {
   event?: MainEvent // se presente, siamo in modalità "edit"
@@ -61,29 +61,20 @@ export default function MainEventForm({ event, onSuccess }: Props) {
     toast.loading(event ? "Aggiornamento evento..." : "Creazione evento...")
 
     try {
-      const res = await httpFetch(
-        event
-          ? `/api/draconischia/main-events/${event.id}`
-          : "/api/draconischia/main-events",
-        {
-          method: event ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        }
-      )
+      const url = event
+        ? `/api/draconischia/main-events/${event.id}`
+        : "/api/draconischia/main-events";
 
-      toast.dismiss()
-      if (res.ok) {
+      const method = event ? "PUT" : "POST";
+      const body = JSON.stringify(form);
+      const res = await httpFetch( url, method, body, true );
+
+      if (res.success) {
         toast.success(event ? "✅ Evento aggiornato" : "✅ Evento creato")
         closeModal()
         onSuccess?.()
-      } else {
-        const data = await res.json()
-        toast.error(data.error || "❌ Errore salvataggio evento")
-      }
-    } catch (err) {
-      toast.dismiss()
-      toast.error(err instanceof Error ? err.message : "❌ Errore salvataggio evento")
+      } 
+    } catch {
     }
   }
 

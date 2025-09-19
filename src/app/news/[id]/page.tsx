@@ -3,14 +3,14 @@
 import { useCallback, useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useAuth } from "@/context/AuthContext"
-import { showError, showSuccess } from "@/lib/toast"
-import { httpFetch, httpFetchPublic } from "@/lib/http"
+import {  showSuccess } from "@/lib/toast"
 import { UserRole } from "@/interfaces/UserRole"
 import { useModal } from "@/lib/modal"
 import NewsArticleForm from "@/components/forms/NewsArticleForm"
 import { NewsArticleExtend } from "@/interfaces/NewArticle"
 import { updateCurrentLike } from "../utils"
 import LikeArticle from "@/components/LikeArticle"
+import { httpFetch } from "@/services/http/httpFetch"
 
 export default function NewsArticlePage() {
   const { id } = useParams()
@@ -21,12 +21,12 @@ export default function NewsArticlePage() {
 
   const fetchArticle = useCallback(async () => {
     try {
-      const res = await httpFetchPublic(`/api/news/${id}`);
-      if (!res.ok) throw new Error("Errore caricamento articolo");
-      const data = await res.json();
-      setArticle(data);
-    } catch (err) {
-      console.error(err);
+      const res = await httpFetch<NewsArticleExtend>(`/api/news/${id}`,"GET");
+      if(res.success && res.data){
+        setArticle(res.data);
+      }
+    } catch {
+
     }
   }, [id]);
 
@@ -37,14 +37,13 @@ export default function NewsArticlePage() {
 
   const handleDelete = async (id: string) => {
       try {
-        const res = await httpFetch(`/api/news/${id}`, { method: "DELETE" })
-        if (!res.ok) throw new Error("Errore eliminazione")
-        showSuccess("Articolo eliminato con successo")
-        // Redirect to news list
-            router.push("/news")
-      } catch (err) {
-        console.error(err)
-        showError("Errore durante l'eliminazione")
+        const res = await httpFetch(`/api/news/${id}`, "DELETE",null, true);
+        if(res.success){
+          showSuccess("Articolo eliminato con successo")
+          router.push("/news")
+        }
+      } catch {
+        
       }
     }
   if (!article) return <p className="text-center py-20">Articolo non trovato</p>

@@ -1,5 +1,5 @@
 import i18n from "i18next"
-import { httpFetchPublic } from "./http"
+import { httpFetch } from "../services/http/httpFetch"
 
 export function translateClient(idml: string, defaultText?: string): string {
    
@@ -16,11 +16,7 @@ export function translateClient(idml: string, defaultText?: string): string {
 
 export async function logMissingIdml(idml: string, defaultText?: string) {
   try {
-    await httpFetchPublic("/api/logger-idml", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idml, defaultText }),
-    })
+    await httpFetch("/api/logger-idml","POST",JSON.stringify({ idml, defaultText }), false )
   } catch (err) {
     console.error("Errore log IDML:", err)
   }

@@ -1,18 +1,18 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import DatePicker from "react-datepicker"
 import { format } from "date-fns"
 import { it } from "date-fns/locale"
 import "react-datepicker/dist/react-datepicker.css"
 import { toast } from "@/lib/toast"
-import { httpFetchPublic } from "@/lib/http"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { T } from "@/components/ui/T"
 import { ResponsiveCard } from "@/components/ui/custom/ResponsiveCard"
+import { httpFetch } from "@/services/http/httpFetch"
+import { useApiHandler } from "@/app/hooks/useApiHandler"
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -29,7 +29,7 @@ export default function RegisterPage() {
   const [isFormValid, setIsFormValid] = useState(false)
   const [emailError, setEmailError] = useState("")
   const [phoneError, setPhoneError] = useState("")
-  const router = useRouter()
+  const { handleResponse } = useApiHandler()
 
   useEffect(() => {
     if (form.name && form.surname) {
@@ -82,32 +82,15 @@ export default function RegisterPage() {
       toast.error("❌ Le password non coincidono")
       return
     }
+    const body = JSON.stringify({
+        ...form,
+        birthdate: formatForDB(form.birthdate),
+      });
 
-    toast.loading("Registrazione in corso...")
-
-    try {
-      const res = await httpFetchPublic("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify({
-          ...form,
-          birthdate: formatForDB(form.birthdate),
-        }),
-      })
-
-      toast.dismiss()
-      const data = await res.json()
-
-      if (res.ok && !data.error) {
-        toast.success("✅ Registrazione completata! Ora puoi accedere.")
-        router.push("/user/login")
-      } else {
-        toast.error(data.error || "❌ Errore durante la registrazione")
-      }
-    } catch (err) {
-      toast.dismiss()
-      console.error("Errore registrazione:", err)
-      toast.error("❌ Errore di connessione al server")
-    }
+    const res = await httpFetch("/api/auth/register", "POST", body, false);
+    
+    handleResponse(res, null, "/user/login");
+      
   }
 
   return (

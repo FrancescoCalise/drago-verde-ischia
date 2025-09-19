@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { showError, showSuccess } from "@/lib/toast"
-import { httpFetch } from "@/lib/http"
+import { showSuccess } from "@/lib/toast"
 import { DatePicker } from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { it } from "date-fns/locale"
 import { useModal } from "@/lib/modal"
+import { httpFetch } from "@/services/http/httpFetch"
 
 interface NewsArticleFormProps {
   onSuccess?: () => void
@@ -35,30 +35,21 @@ export default function NewsArticleForm({ onSuccess, article }: NewsArticleFormP
     try {
       const method = isEdit ? "PUT" : "POST"
       const url = isEdit ? `/api/news/${article?.id}` : "/api/news"
-
-      const res = await httpFetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const body = JSON.stringify({
           title,
           content,
           imageUrl,
           publishedAt: publishedAt ? new Date(publishedAt) : undefined,
-        }),
-      })
+        });
 
-      if (!res.ok) {
-        const err = await res.json()
-        showError(err.error || "Errore durante il salvataggio della news")
-        return
+      const res = await httpFetch(url, method, body, true);
+
+      if (res.success) {
+         showSuccess(isEdit ? "News aggiornata con successo" : "News creata con successo")
+        closeModal()
+        if (onSuccess) onSuccess()
       }
-
-      showSuccess(isEdit ? "News aggiornata con successo" : "News creata con successo")
-      closeModal()
-      if (onSuccess) onSuccess()
-    } catch (err) {
-      console.error(err)
-      showError("Errore durante il salvataggio")
+    } catch  {
     } finally {
 
     }

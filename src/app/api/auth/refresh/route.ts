@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextResponse } from "next/server"
 import jwt from "jsonwebtoken"
 import { prisma } from "@/lib/prisma"
+import { successResponse, errorResponse } from "@/lib/apiResponse"
+import { trackError } from "@/services/errorTracker"
 
 const JWT_SECRET = process.env.JWT_SECRET!
 const REFRESH_SECRET = process.env.REFRESH_SECRET!
 
 export async function POST(req: Request) {
   try {
-    // leggo i cookie
+    // Leggo i cookie
     const cookieHeader = req.headers.get("cookie")
     const cookies: Record<string, string> = {}
     cookieHeader?.split(";").forEach((cookie) => {
@@ -18,39 +18,46 @@ export async function POST(req: Request) {
 
     const refreshToken = cookies["refreshToken"]
     if (!refreshToken) {
-      return NextResponse.json({ error: "Refresh token mancante" }, { status: 401 })
+      return errorResponse("auth.refresh_missing", "Refresh token mancante", 401)
     }
 
-    // verifico refresh token
-    let payload: any
+    // Verifico refresh token
+    let payload: { id: string }
     try {
-      payload = jwt.verify(refreshToken, REFRESH_SECRET)
+      payload = jwt.verify(refreshToken, REFRESH_SECRET) as { id: string }
     } catch (err) {
-      return NextResponse.json({ error: (err as Error).message }, { status: 403 })
+      const message = (err as Error).message
+      return errorResponse("auth.refresh_invalid", message, 403)
     }
 
-    // recupero utente dal DB
+    // Recupero utente dal DB
     const user = await prisma.appUser.findUnique({
       where: { id: payload.id },
       include: {
         GdrSessionRegistrations: { include: { session: true } },
-        mainEventRegistrations: { include: { event: true } }
-      }
+        mainEventRegistrations: { include: { event: true } },
+      },
     })
+
     if (!user) {
-      return NextResponse.json({ error: "Utente non trovato" }, { status: 404 })
+      return errorResponse("auth.user_not_found", "Utente non trovato", 404)
     }
 
-    // creo nuovo access token
+    // Creo nuovo access token
     const accessToken = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       JWT_SECRET,
       { expiresIn: "1h" }
     )
 
-    return NextResponse.json({ accessToken })
+    return successResponse(
+      { accessToken, user },
+      "auth.refresh_success",
+      "Refresh token valido, nuovo access token generato",
+      200
+    )
   } catch (err) {
-    console.error("Errore refresh:", err)
-    return NextResponse.json({ error: "Errore nel refresh" }, { status: 500 })
+    trackError(err, "POST /api/auth/refresh")
+    return errorResponse("auth.refresh_error", "Errore durante il refresh del token", 500)
   }
 }

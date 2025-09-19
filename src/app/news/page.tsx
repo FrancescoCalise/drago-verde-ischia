@@ -2,59 +2,51 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { showError, showSuccess } from "@/lib/toast";
 import { useAuth } from "@/context/AuthContext";
-import { httpFetch, httpFetchPublic } from "@/lib/http";
 import { UserRole } from "@/interfaces/UserRole";
-import { NewsArticleExtend } from "@/interfaces/NewArticle";
+import { NewArticleResponse, NewsArticleExtend } from "@/interfaces/NewArticle";
 import { useModal } from "@/lib/modal";
 import NewsArticleForm from "@/components/forms/NewsArticleForm";
 import { getOnlyDate } from "@/lib/manageDataUtils";
 import LikeArticle from "@/components/LikeArticle";
+import { httpFetch } from "@/services/http/httpFetch";
+import { useApiHandler } from "../hooks/useApiHandler";
 
 export default function NewsPage() {
   const [articles, setArticles] = useState<NewsArticleExtend[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
+  const { handleResponse } = useApiHandler();
   const [search, setSearch] = useState("");
   type FilterType = "title" | "date" | "author";
   const [filterBy, setFilterBy] = useState<FilterType>("title");
 
   const { user } = useAuth();
   const { openModal } = useModal();
+
   const fetchArticles = useCallback(async () => {
-    try {
-      const res = await httpFetchPublic(
-        `/api/news?page=${page}&limit=10&filterBy=${filterBy}&search=${encodeURIComponent(
-          search
-        )}`
-      );
-      if (!res.ok) return;
-      const data = await res.json();
-      setArticles(data.articles || []);
-      setTotalPages(data.totalPages);
-    } catch (err) {
-      console.error(err);
-      showError("Errore nel caricamento delle news");
-    }
-  }, [page, search, filterBy]);
+    const res = await httpFetch<NewArticleResponse>(
+      `/api/news?page=${page}&limit=10&filterBy=${filterBy}&search=${encodeURIComponent(search)}`,
+      "GET",
+      null,
+      false
+    )
+
+    handleResponse(res, () => {
+      const data = res.data as NewArticleResponse
+      setArticles(data.articles)
+      setTotalPages(data.totalPages)
+    })
+}, [page, search, filterBy, handleResponse])
+
 
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles]);
 
-
   const handleDelete = async (id: string) => {
-    try {
-      const res = await httpFetch(`/api/news/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Errore eliminazione");
-      showSuccess("Articolo eliminato con successo");
-      fetchArticles();
-    } catch (err) {
-      console.error(err);
-      showError("Errore durante l'eliminazione");
-    }
+      const res = await httpFetch(`/api/news/${id}`, "DELETE" , null, true);
+      handleResponse(res, () => fetchArticles());
   };
 
   return (

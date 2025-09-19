@@ -1,22 +1,30 @@
 // src/app/api/user/change-password/route.ts
-import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcrypt"
-import { DecodedUser, requireAuth } from "@/lib/authMiddleware";
+import { DecodedUser, requireAuth } from "@/lib/authMiddleware"
+import { successResponse, errorResponse } from "@/lib/apiResponse"
+import { trackError } from "@/services/errorTracker"
 
 export async function POST(req: Request) {
   try {
-    const auth = await requireAuth(req);
+    const auth = await requireAuth(req)
+    if (!auth.ok) return auth.response
 
-    if (!auth.ok) return new Response(JSON.stringify({ error: "Non autenticato" }), { status: 401 });
-    const currentUser = auth.user as DecodedUser;
+    const currentUser = auth.user as DecodedUser
     if (!currentUser.id) {
-      return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
+      return errorResponse("user.unauthorized", "Non autorizzato", 401)
     }
 
     const { newPassword } = await req.json()
-    if (!newPassword || newPassword.length < 6) {
-      return NextResponse.json({ error: "Password troppo corta" }, { status: 400 })
+    if (!newPassword) {
+      return errorResponse("user.password_missing", "Password mancante", 400)
+    }
+    if (newPassword.length < 6) {
+      return errorResponse(
+        "user.password_too_short",
+        "Password troppo corta (minimo 6 caratteri)",
+        400
+      )
     }
 
     // Cripta la password come nel register
@@ -27,9 +35,14 @@ export async function POST(req: Request) {
       data: { password: hashedPassword },
     })
 
-    return NextResponse.json({ success: true })
+    return successResponse(
+      null,
+      "user.password_change_success",
+      "Password aggiornata con successo",
+      200
+    )
   } catch (err) {
-    console.error(err)
-    return NextResponse.json({ error: "Errore interno" }, { status: 500 })
+    trackError(err, "POST /api/user/change-password")
+    return errorResponse("user.password_change_error", "Errore durante il cambio della password", 500)
   }
 }
