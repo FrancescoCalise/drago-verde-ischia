@@ -1,5 +1,4 @@
 // src/services/WrapperPrismaErrorHandler.ts
-import { Prisma } from "@prisma/client"
 import { errorResponse } from "@/lib/apiResponse"
 import { trackError } from "@/services/errorTracker"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
