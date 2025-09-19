@@ -13,19 +13,25 @@ export function useApiHandler() {
   const handleResponse = useCallback(<T>(
     res: ApiResponse<T>,
     onSuccess?: ((data: T | undefined) => void) | null,
-    redirectTo?: string
+    redirectTo?: string,
+    isSilent?: boolean
   ) => {
     const msg = t(res.idml, { defaultValue: res.message ?? "" })
 
     if (!res.success) {
+      if (!isSilent) {
       toast.error(msg)
+    }
       return
     }
 
-    toast.success(msg)
+    if (!isSilent){
+      toast.success(msg)
+    }
+
     if (onSuccess) onSuccess(res.data)
     if (redirectTo) router.push(redirectTo)
-  }, [router, t])   // 👈 useCallback qui
+  }, [router, t]) 
 
   return { handleResponse }
 }

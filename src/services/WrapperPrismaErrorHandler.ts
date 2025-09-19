@@ -2,13 +2,14 @@
 import { Prisma } from "@prisma/client"
 import { errorResponse } from "@/lib/apiResponse"
 import { trackError } from "@/services/errorTracker"
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 
 /**
  * Mappa gli errori Prisma in errorResponse uniformi
  */
 export function mapPrismaError(err: unknown, context?: string) {
   if ((err as Error).name === "PrismaClientKnownRequestError") {
-    const prismaErr = err as Prisma.PrismaClientKnownRequestError
+    const prismaErr = err as PrismaClientKnownRequestError
 
     switch (prismaErr.code) {
       case "P2002":

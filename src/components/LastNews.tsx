@@ -29,7 +29,7 @@ export default function LastNews({ numberOfArticles = 3 }: LastNewsProps) {
       handleResponse(res, () => {
         const data = res.data as NewArticleResponse
         setArticles(data.articles)
-      })
+      }, undefined, true)
   }, [numberOfArticles, handleResponse])
 
   useEffect(() => {
