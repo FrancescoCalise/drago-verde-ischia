@@ -2870,6 +2870,7 @@ export namespace Prisma {
     start: Date | null
     end: Date | null
     master: string | null
+    gameReference: string | null
     availableSeats: number | null
     created_at: Date | null
     updated_at: Date | null
@@ -2883,6 +2884,7 @@ export namespace Prisma {
     start: Date | null
     end: Date | null
     master: string | null
+    gameReference: string | null
     availableSeats: number | null
     created_at: Date | null
     updated_at: Date | null
@@ -2896,6 +2898,7 @@ export namespace Prisma {
     start: number
     end: number
     master: number
+    gameReference: number
     availableSeats: number
     created_at: number
     updated_at: number
@@ -2919,6 +2922,7 @@ export namespace Prisma {
     start?: true
     end?: true
     master?: true
+    gameReference?: true
     availableSeats?: true
     created_at?: true
     updated_at?: true
@@ -2932,6 +2936,7 @@ export namespace Prisma {
     start?: true
     end?: true
     master?: true
+    gameReference?: true
     availableSeats?: true
     created_at?: true
     updated_at?: true
@@ -2945,6 +2950,7 @@ export namespace Prisma {
     start?: true
     end?: true
     master?: true
+    gameReference?: true
     availableSeats?: true
     created_at?: true
     updated_at?: true
@@ -3045,6 +3051,7 @@ export namespace Prisma {
     start: Date
     end: Date
     master: string
+    gameReference: string
     availableSeats: number
     created_at: Date | null
     updated_at: Date | null
@@ -3077,6 +3084,7 @@ export namespace Prisma {
     start?: boolean
     end?: boolean
     master?: boolean
+    gameReference?: boolean
     availableSeats?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -3092,6 +3100,7 @@ export namespace Prisma {
     start?: boolean
     end?: boolean
     master?: boolean
+    gameReference?: boolean
     availableSeats?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -3105,6 +3114,7 @@ export namespace Prisma {
     start?: boolean
     end?: boolean
     master?: boolean
+    gameReference?: boolean
     availableSeats?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -3118,12 +3128,13 @@ export namespace Prisma {
     start?: boolean
     end?: boolean
     master?: boolean
+    gameReference?: boolean
     availableSeats?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type GdrSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "urlImg" | "start" | "end" | "master" | "availableSeats" | "created_at" | "updated_at", ExtArgs["result"]["gdrSession"]>
+  export type GdrSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "urlImg" | "start" | "end" | "master" | "gameReference" | "availableSeats" | "created_at" | "updated_at", ExtArgs["result"]["gdrSession"]>
   export type GdrSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     gdrSessionRegistrations?: boolean | GdrSession$gdrSessionRegistrationsArgs<ExtArgs>
     _count?: boolean | GdrSessionCountOutputTypeDefaultArgs<ExtArgs>
@@ -3144,6 +3155,7 @@ export namespace Prisma {
       start: Date
       end: Date
       master: string
+      gameReference: string
       availableSeats: number
       created_at: Date | null
       updated_at: Date | null
@@ -3578,6 +3590,7 @@ export namespace Prisma {
     readonly start: FieldRef<"GdrSession", 'DateTime'>
     readonly end: FieldRef<"GdrSession", 'DateTime'>
     readonly master: FieldRef<"GdrSession", 'String'>
+    readonly gameReference: FieldRef<"GdrSession", 'String'>
     readonly availableSeats: FieldRef<"GdrSession", 'Int'>
     readonly created_at: FieldRef<"GdrSession", 'DateTime'>
     readonly updated_at: FieldRef<"GdrSession", 'DateTime'>
@@ -10569,6 +10582,7 @@ export namespace Prisma {
     start: 'start',
     end: 'end',
     master: 'master',
+    gameReference: 'gameReference',
     availableSeats: 'availableSeats',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -10841,6 +10855,7 @@ export namespace Prisma {
     start?: DateTimeFilter<"GdrSession"> | Date | string
     end?: DateTimeFilter<"GdrSession"> | Date | string
     master?: StringFilter<"GdrSession"> | string
+    gameReference?: StringFilter<"GdrSession"> | string
     availableSeats?: IntFilter<"GdrSession"> | number
     created_at?: DateTimeNullableFilter<"GdrSession"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"GdrSession"> | Date | string | null
@@ -10855,6 +10870,7 @@ export namespace Prisma {
     start?: SortOrder
     end?: SortOrder
     master?: SortOrder
+    gameReference?: SortOrder
     availableSeats?: SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
@@ -10872,6 +10888,7 @@ export namespace Prisma {
     start?: DateTimeFilter<"GdrSession"> | Date | string
     end?: DateTimeFilter<"GdrSession"> | Date | string
     master?: StringFilter<"GdrSession"> | string
+    gameReference?: StringFilter<"GdrSession"> | string
     availableSeats?: IntFilter<"GdrSession"> | number
     created_at?: DateTimeNullableFilter<"GdrSession"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"GdrSession"> | Date | string | null
@@ -10886,6 +10903,7 @@ export namespace Prisma {
     start?: SortOrder
     end?: SortOrder
     master?: SortOrder
+    gameReference?: SortOrder
     availableSeats?: SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
@@ -10907,6 +10925,7 @@ export namespace Prisma {
     start?: DateTimeWithAggregatesFilter<"GdrSession"> | Date | string
     end?: DateTimeWithAggregatesFilter<"GdrSession"> | Date | string
     master?: StringWithAggregatesFilter<"GdrSession"> | string
+    gameReference?: StringWithAggregatesFilter<"GdrSession"> | string
     availableSeats?: IntWithAggregatesFilter<"GdrSession"> | number
     created_at?: DateTimeNullableWithAggregatesFilter<"GdrSession"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"GdrSession"> | Date | string | null
@@ -11414,6 +11433,7 @@ export namespace Prisma {
     start: Date | string
     end: Date | string
     master: string
+    gameReference: string
     availableSeats: number
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -11428,6 +11448,7 @@ export namespace Prisma {
     start: Date | string
     end: Date | string
     master: string
+    gameReference: string
     availableSeats: number
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -11442,6 +11463,7 @@ export namespace Prisma {
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     master?: StringFieldUpdateOperationsInput | string
+    gameReference?: StringFieldUpdateOperationsInput | string
     availableSeats?: IntFieldUpdateOperationsInput | number
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11456,6 +11478,7 @@ export namespace Prisma {
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     master?: StringFieldUpdateOperationsInput | string
+    gameReference?: StringFieldUpdateOperationsInput | string
     availableSeats?: IntFieldUpdateOperationsInput | number
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11470,6 +11493,7 @@ export namespace Prisma {
     start: Date | string
     end: Date | string
     master: string
+    gameReference: string
     availableSeats: number
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -11483,6 +11507,7 @@ export namespace Prisma {
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     master?: StringFieldUpdateOperationsInput | string
+    gameReference?: StringFieldUpdateOperationsInput | string
     availableSeats?: IntFieldUpdateOperationsInput | number
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11496,6 +11521,7 @@ export namespace Prisma {
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     master?: StringFieldUpdateOperationsInput | string
+    gameReference?: StringFieldUpdateOperationsInput | string
     availableSeats?: IntFieldUpdateOperationsInput | number
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12134,6 +12160,7 @@ export namespace Prisma {
     start?: SortOrder
     end?: SortOrder
     master?: SortOrder
+    gameReference?: SortOrder
     availableSeats?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -12151,6 +12178,7 @@ export namespace Prisma {
     start?: SortOrder
     end?: SortOrder
     master?: SortOrder
+    gameReference?: SortOrder
     availableSeats?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -12164,6 +12192,7 @@ export namespace Prisma {
     start?: SortOrder
     end?: SortOrder
     master?: SortOrder
+    gameReference?: SortOrder
     availableSeats?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -13266,6 +13295,7 @@ export namespace Prisma {
     start: Date | string
     end: Date | string
     master: string
+    gameReference: string
     availableSeats: number
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -13279,6 +13309,7 @@ export namespace Prisma {
     start: Date | string
     end: Date | string
     master: string
+    gameReference: string
     availableSeats: number
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -13351,6 +13382,7 @@ export namespace Prisma {
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     master?: StringFieldUpdateOperationsInput | string
+    gameReference?: StringFieldUpdateOperationsInput | string
     availableSeats?: IntFieldUpdateOperationsInput | number
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13364,6 +13396,7 @@ export namespace Prisma {
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     master?: StringFieldUpdateOperationsInput | string
+    gameReference?: StringFieldUpdateOperationsInput | string
     availableSeats?: IntFieldUpdateOperationsInput | number
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

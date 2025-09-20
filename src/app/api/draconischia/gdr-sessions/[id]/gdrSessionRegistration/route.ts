@@ -29,24 +29,36 @@ export async function POST(
       return errorResponse("gdr_sessions.no_seats", "Posti esauriti", 400)
     }
 
-    // 🔹 Verifica conflitto orario
-    const userRegs = await prisma.gdrSessionRegistration.findMany({
+    // 🔹 Verifica conflitto orario con altre sessioni GDR
+    const userSessions = await prisma.gdrSessionRegistration.findMany({
       where: { userId: user.id },
       include: { session: true },
     })
-
-    const hasConflict = userRegs.some((b) => {
+    const hasConflictWithGdr = userSessions.some((b) => {
       const other = b.session
       return (
-        new Date(session.start) >= new Date(other.start) &&
-        new Date(session.start) < new Date(other.end)
+        new Date(session.start) < new Date(other.end) &&
+        new Date(session.end) > new Date(other.start)
       )
     })
 
-    if (hasConflict) {
+    // 🔹 Verifica conflitto orario con Main Events
+    const userMainEvents = await prisma.mainEventRegistration.findMany({
+      where: { userId: user.id },
+      include: { event: true },
+    })
+    const hasConflictWithMain = userMainEvents.some((m) => {
+      const other = m.event
+      return (
+        new Date(session.start) < new Date(other.end) &&
+        new Date(session.end) > new Date(other.start)
+      )
+    })
+
+    if (hasConflictWithGdr || hasConflictWithMain) {
       return errorResponse(
         "gdr_sessions.conflict",
-        "Hai già una sessione prenotata in questo orario",
+        "Hai già un'attività prenotata in questo orario",
         400
       )
     }
@@ -75,10 +87,18 @@ export async function POST(
       201
     )
   } catch (err) {
-    trackError(err, "POST /api/draconischia/gdr-sessions/[id]/gdrSessionRegistration")
-    return errorResponse("gdr_sessions.registration_error", "Errore durante l'iscrizione", 500)
+    trackError(
+      err,
+      "POST /api/draconischia/gdr-sessions/[id]/gdrSessionRegistration"
+    )
+    return errorResponse(
+      "gdr_sessions.registration_error",
+      "Errore durante l'iscrizione",
+      500
+    )
   }
 }
+
 
 export async function DELETE(
   req: Request,

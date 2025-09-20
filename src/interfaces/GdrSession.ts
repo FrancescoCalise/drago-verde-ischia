@@ -1,14 +1,11 @@
-import { GdrSessionRegistration } from "./GdrSessionRegistration"
+// src/interfaces/GdrSession.ts
+import { GdrSession, GdrSessionRegistration, AppUser } from "@/generated/prisma"
 
-export interface GdrSession {
-  id?: string
-  title: string
-  description: string
-  urlImg: string
-  start: Date | null
-  end: Date | null
-  master: string
-  availableSeats: number
-  gdrSessionRegistrations?: GdrSessionRegistration[] // array di prenotazioni collegate
-  _count?: { gdrSessionRegistrations: number } // conteggio prenotazioni
+export interface GdrSessionRegistrationExtended extends GdrSessionRegistration {
+  user?: Pick<AppUser, "id" | "username" | "name" | "surname">
+}
+
+export interface GdrSessionExtended extends GdrSession {
+  gdrSessionRegistrations?: GdrSessionRegistrationExtended[] // array di prenotazioni collegate con utente
+  _count?: { gdrSessionRegistrations: number }               // conteggio prenotazioni
 }

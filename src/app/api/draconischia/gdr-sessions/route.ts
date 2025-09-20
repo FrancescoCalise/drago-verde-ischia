@@ -34,11 +34,11 @@ export async function POST(req: Request) {
     const auth = await requireAuth(req, [UserRole.ADMIN])
     if (!auth.ok) return auth.response
 
-    const { title, description, urlImg, start, end, master, availableSeats } =
+    const { title, description, urlImg, start, end, master, availableSeats, gameReference } =
       await req.json()
 
     // 🔹 Validazioni
-    if (!title || !description || !start || !end || !master) {
+    if (!title || !description || !start || !end || !master || !gameReference) {
       return errorResponse(
         "gdr_sessions.missing_fields",
         "Campi obbligatori mancanti",
@@ -82,6 +82,7 @@ export async function POST(req: Request) {
         end: endDt,
         master: String(master).trim(),
         availableSeats: seats,
+        gameReference: String(gameReference).trim(), // 👈 AGGIUNTO
       },
     })
 
@@ -96,3 +97,4 @@ export async function POST(req: Request) {
     return errorResponse("gdr_sessions.create_error", "Errore durante la creazione della sessione GDR", 500)
   }
 }
+

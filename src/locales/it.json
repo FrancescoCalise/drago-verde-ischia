@@ -1,143 +1,120 @@
 {
-  "login": {
-    "title": "Accedi",
-    "username": "Username",
-    "password": "Password",
-    "submit": "Accedi",
-    "loading": "Accesso in corso...",
-    "success": "Login effettuato con successo!",
-    "error": "Errore durante il login",
-    "noToken": "Nessun token ricevuto",
-    "registerLink": "Registrati",
-    "forgotLink": "Password dimenticata?"
-  },
+    "login.title": "Accedi",
+    "login.username": "Username",
+    "login.password": "Password",
+    "login.submit": "Accedi",
+    "login.loading": "Accesso in corso...",
+    "login.success": "Login effettuato con successo!",
+    "login.error": "Errore durante il login",
+    "login.noToken": "Nessun token ricevuto",
+    "login.registerLink": "Registrati",
+    "login.forgotLink": "Password dimenticata?",
 
-  "register": {
-    "title": "Registrazione",
-    "name": "Nome",
-    "surname": "Cognome",
-    "username": "Username",
-    "birthdate": "Data di nascita",
-    "email": "Email",
-    "password": "Password",
-    "confirmPassword": "Conferma Password",
-    "phone": "Telefono",
-    "submit": "Registrati",
-    "loading": "Registrazione in corso...",
-    "success": "Registrazione completata! Ora puoi accedere.",
-    "error": "Errore durante la registrazione",
-    "errorConnection": "Errore di connessione al server",
-    "errorPasswords": "Le password non coincidono",
-    "errorEmail": "Email non valida",
-    "errorPhone": "Il numero di telefono deve contenere solo cifre"
-  },
 
-  "forgot": {
-    "title": "Password dimenticata",
-    "username": "Username",
-    "email": "Email",
-    "submit": "Invia link di reset",
-    "sending": "Invio in corso...",
-    "success": "Se i dati sono corretti, ti abbiamo inviato un'email con il link per reimpostare la password.",
-    "error": "Errore nell'invio della richiesta",
-    "errorConnection": "Errore di connessione al server"
-  },
-  "reset": {
-    "title": "Reset Password",
-    "password": "Nuova password",
-    "confirmPassword": "Conferma password",
-    "submit": "Reimposta",
-    "success": "Password aggiornata con successo!",
-    "error": "Errore reset password",
-    "errorMismatch": "Le password non coincidono",
-    "errorConnection": "Errore di connessione al server"
-    },
-    "footer": {
-      "tagline": "Community unita dal gioco e dalla fantasia.",
-      "contacts": {
-        "title": "Contatti"
-      },
-      "social": {
-        "title": "Seguici"
-      }
-    },
-    "nav": {
-      "about": "Chi Siamo",
-      "events": "Eventi",
-      "dracon": "DraCon Ischia",
-      "dracon.homePage": "Home",
-      "dracon.agenda": "Programma",
-      "dracon.sessions": "Sessioni GDR",
-      "dracon.mainEvents": "Main Events",
-      "dracon.rules": "Regolamenti & FAQ",
-      "dracon.manage": "Gestisci Eventi",
-      "dracon.old": "Edizioni Passate",
-      "media": "Media",
-      "support": "Sostienici",
-      "support.5x1000": "5×1000",
-      "support.donations": "Donazioni",
-      "support.membership": "Tesseramento",
-      "news": "News",
-      "contacts": "Contatti",
-      "dashboard": "Dashboard",
-      "profile": "Profilo",
-      "logout": "Logout",
-      "login": "Login",
-      "join": "Unisciti a Noi"
-    },
+    "register.title": "Registrazione",
+    "register.name": "Nome",
+    "register.surname": "Cognome",
+    "register.username": "Username",
+    "register.birthdate": "Data di nascita",
+    "register.email": "Email",
+    "register.password": "Password",
+    "register.confirmPassword": "Conferma Password",
+    "register.phone": "Telefono",
+    "register.submit": "Registrati",
+    "register.loading": "Registrazione in corso...",
+    "register.success": "Registrazione completata! Ora puoi accedere.",
+    "register.error": "Errore durante la registrazione",
+    "register.errorConnection": "Errore di connessione al server",
+    "register.errorPasswords": "Le password non coincidono",
+    "register.errorEmail": "Email non valida",
+    "register.errorPhone": "Il numero di telefono deve contenere solo cifre",
+  
+    "forgot.title": "Password dimenticata",
+    "forgot.username": "Username",
+    "forgot.email": "Email",
+    "forgot.submit": "Invia link di reset",
+    "forgot.sending": "Invio in corso...",
+    "forgot.success": "Se i dati sono corretti, ti abbiamo inviato un'email con il link per reimpostare la password.",
+    "forgot.error": "Errore nell'invio della richiesta",
+    "forgot.errorConnection": "Errore di connessione al server",
+
+    "reset.title": "Reset Password",
+    "reset.password": "Nuova password",
+    "reset.confirmPassword": "Conferma password",
+    "reset.submit": "Reimposta",
+    "reset.success": "Password aggiornata con successo!",
+    "reset.error": "Errore reset password",
+    "reset.errorMismatch": "Le password non coincidono",
+    "reset.errorConnection": "Errore di connessione al server",
+
+    "footer.tagline": "Community unita dal gioco e dalla fantasia.",
+    "footer.contacts.title": "Contatti",
+    "footer.social.title": "Seguici",
     "copyright": "Drago Verde Ischia A.P.S.",
-    "hero":{
-      "title": "Drago Verde Ischia",
-      "subtitle": "La community di gioco di ruolo dal vivo e da tavolo di Ischia"
-    },
-    "featured": {
-      "subtitle": "Il nostro prossimo evento",
-      "title": "DraCon Ischia",
-      "date": "📅 11 e 12 Ottobre",
-      "location": "📍 Cittadella della Carità, Forio",
-      "description": "Il festival del gioco e della cultura nerd che unisce l'isola d'Ischia. Giochi da tavolo, di ruolo, tornei, cosplay, conferenze e tanto altro.",
-      "cta": "Scopri tutti i dettagli"
-    },
-    "about": {
-      "hero": {
-        "title": "Chi Siamo",
-        "subtitle": "La storia, i valori e le persone dietro il Drago Verde",
-        "cta": "Unisciti a Noi"
-      },
-      "story": {
-        "title": "Nati dalla passione, cresciuti con la community",
-        "text": "L'associazione Drago Verde Ischia A.P.S. è nata nel 2022 dalla passione di un gruppo di amici per il gioco e la cultura geek..."
-      },
-      "mission": {
-        "title": "Il nostro obiettivo: unire, ispirare, creare",
-        "unite": "Unire le persone – favorire la socializzazione e creare legami duraturi.",
-        "inspire": "Ispirare la crescita – stimolare creatività, pensiero critico e immaginazione.",
-        "create": "Creare esperienze uniche – proporre eventi e tornei indimenticabili."
-      },
-      "values": {
-        "title": "I valori che ci guidano",
-        "collaboration": "Collaborazione",
-        "collaboration.text": "Crediamo nella forza del gruppo e nel valore di fare squadra.",
-        "passion": "Passione",
-        "passion.text": "Ogni attività nasce dall’amore per il gioco e la condivisione.",
-        "creativity": "Creatività",
-        "creativity.text": "Promuoviamo fantasia e innovazione in ogni esperienza di gioco."
-      },
-      "board": {
-        "title": "Il nostro direttivo"
-      },
-      "cta": {
-        "title": "Vuoi far parte della nostra storia?",
-        "text": "Unisciti al Drago Verde Ischia e diventa parte della nostra community!",
-        "button": "Entra nella community"
-      }
-    },
-    "manageEventPage": {
-      "addSession": "Aggiungi Sessione",
-      "editSession": "Modifica Sessione",
-      "addMainEvent": "Aggiungi Main Event",
-      "editMainEvent": "Modifica Main Event"
-    },
+    
+    "nav.about": "Chi Siamo",
+    "nav.events": "Eventi",
+    "nav.dracon": "DraCon Ischia",
+    "nav.dracon.homePage": "Home",
+    "nav.dracon.agenda": "Programma",
+    "nav.dracon.sessions": "Sessioni GDR",
+    "nav.dracon.mainEvents": "Main Events",
+    "nav.dracon.rules": "Regolamenti & FAQ",
+    "nav.dracon.manage": "Gestisci Eventi",
+    "nav.dracon.old": "Edizioni Passate",
+    "nav.media": "Media",
+    "nav.support": "Sostienici",
+    "nav.support.5x1000": "5×1000",
+    "nav.support.donations": "Donazioni",
+    "nav.support.membership": "Tesseramento",
+    "nav.news": "News",
+    "nav.contacts": "Contatti",
+    "nav.dashboard": "Dashboard",
+    "nav.profile": "Profilo",
+    "nav.logout": "Logout",
+    "nav.login": "Login",
+    "nav.join": "Unisciti a Noi",
+    
+    "hero.title": "Drago Verde Ischia",
+    "hero.subtitle": "La community di gioco di ruolo dal vivo e da tavolo di Ischia",
+
+    "featured.subtitle": "Il nostro prossimo evento",
+    "featured.title": "DraCon Ischia",
+    "featured.date": "📅 11 e 12 Ottobre",
+    "featured.location": "📍 Cittadella della Carità, Forio",
+    "featured.description": "Il festival del gioco e della cultura nerd che unisce l'isola d'Ischia. Giochi da tavolo, di ruolo, tornei, cosplay, conferenze e tanto altro.",
+    "featured.cta": "Scopri tutti i dettagli",
+    
+    "about.hero.title": "Chi Siamo",
+    "about.hero.subtitle": "La storia, i valori e le persone dietro il Drago Verde",
+    "about.hero.cta": "Unisciti a Noi",
+ 
+    "story.title": "Nati dalla passione, cresciuti con la community",
+    "story.text": "L'associazione Drago Verde Ischia A.P.S. è nata nel 2022 dalla passione di un gruppo di amici per il gioco e la cultura geek...",
+    
+    "mission.title": "Il nostro obiettivo: unire, ispirare, creare",
+    "mission.unite": "Unire le persone – favorire la socializzazione e creare legami duraturi.",
+    "mission.inspire": "Ispirare la crescita – stimolare creatività, pensiero critico e immaginazione.",
+    "mission.create": "Creare esperienze uniche – proporre eventi e tornei indimenticabili.",
+    "values.title": "I valori che ci guidano",
+    "values.collaboration": "Collaborazione",
+    "values.collaboration.text": "Crediamo nella forza del gruppo e nel valore di fare squadra.",
+    "values.passion": "Passione",
+    "values.passion.text": "Ogni attività nasce dall’amore per il gioco e la condivisione.",
+    "values.creativity": "Creatività",
+    "values.creativity.text": "Promuoviamo fantasia e innovazione in ogni esperienza di gioco.",
+
+    "board.title": "Il nostro direttivo",
+
+    "cta.title": "Vuoi far parte della nostra storia?",
+    "cta.text": "Unisciti al Drago Verde Ischia e diventa parte della nostra community!",
+    "cta.button": "Entra nella community",
+
+    "manageEventPage.addSession": "Aggiungi Sessione",
+    "manageEventPage.editSession": "Modifica Sessione",
+    "manageEventPage.addMainEvent": "Aggiungi Main Event",
+    "manageEventPage.editMainEvent": "Modifica Main Event",
+
     "rollRole.hero.title": "Roll & Role",
     "rollRole.hero.subtitle": "Serata dedicata al Gioco di Ruolo",
     "rollRole.intro.title": "Entra in mondi fantastici",
@@ -251,15 +228,18 @@
     "dracon.story.p2": "Entra nei panni di un eroe, sfida i draghi e incontra altri appassionati come te. Le storie che vivrai qui resteranno per sempre con te.",
     "dracon.story.cta": "Scopri il programma completo",
 
+    "dracon.info.title": "Tutte le informazioni utili",
     "dracon.info.location": "Dove si svolge",
     "dracon.info.locationDesc": "Cittadella della Carità, Forio d’Ischia (NA)",
     "dracon.info.access": "Ingresso e prenotazioni",
-    "dracon.info.accessDesc": "Ingresso gratuito. Prenotazione obbligatoria per GDR e tornei.",
+    "dracon.info.accessDesc": "Ingresso gratuito. Prenotazione obbligatoria per GDR e tornei (a pagamento).",
     "dracon.info.program": "Programma",
     "dracon.info.programDesc": "Scopri tutti gli appuntamenti e gli eventi speciali.",
     "dracon.info.cta": "Vai al Programma",
-    "dracon.info.dateTime": "Data e Orario",
-    "dracon.info.dateTimeDesc": "11 e 12 Ottobre · dalle 10:00 alle 23:00",
+    "dracon.info.dateTime": "Date e Orari",
+    "dracon.info.dateTimeDesc": "11 e 12 Ottobre · dalle 15:00 alle 00:00",
+    "dracon.info.dinner": "Pausa cena",
+    "dracon.info.dinnerDesc": "Dalle 20:00 alle 21:00",
 
     "dracon.program.title": "Programma",
     "dracon.program.subtitle": "Scopri cosa succede durante l’evento",
@@ -277,5 +257,22 @@
     "dracon.program.slot.host": "A cura di",
 
     "dracon.program.empty": "Il programma sarà pubblicato a breve",
-    "dracon.program.more": "…e molto altro!"
+    "dracon.program.more": "…e molto altro!",
+
+    "dracon.dinner.title": "Pausa Cena (20:00 – 21:00)",
+    "dracon.dinner.subtitle": "Menù disponibili (10€ ciascuno)",
+    "dracon.dinner.orderInfo": "Ordini in segreteria entro le 19:00 di ogni giorno",
+    "dracon.dinner.sponsoredBy": "Sponsorizzato da Annunziata",
+
+    "dracon.dinner.menu.warrior": "Menù del Guerriero",
+    "dracon.dinner.menu.warrior.desc": "Panino (sofficione, hamburger, cheddar, patatine, maionese) · Patatine · Bibita (Acqua, Coca-Cola, Fanta)",
+
+    "dracon.dinner.menu.cleric": "Menù del Chierico",
+    "dracon.dinner.menu.cleric.desc": "Panino (sofficione, salsiccia, cheddar, patatine, maionese) · Patatine · Bibita (Acqua, Coca-Cola, Fanta)",
+
+    "dracon.dinner.menu.barbarian": "Menù del Barbaro",
+    "dracon.dinner.menu.barbarian.desc": "Panino (sofficione, porchetta, cheddar, patatine, maionese) · Patatine · Bibita (Acqua, Coca-Cola, Fanta)",
+
+    "dracon.dinner.menu.druid": "Menù del Druido",
+    "dracon.dinner.menu.druid.desc": "Insalata · Patatine · Bibita (Acqua, Coca-Cola, Fanta)"
     }

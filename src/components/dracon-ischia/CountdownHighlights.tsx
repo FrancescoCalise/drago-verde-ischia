@@ -20,71 +20,80 @@ export default function DraconCountdownHighlightsComponent() {
   }, [])
 
   return (
-    <section className="relative py-6 px-6 text-center">
-      {/* Countdown */}
-      <div className="mb-8">
-        <h2 className="text-3xl md:text-4xl font-extrabold drop-shadow-lg">
-          <T idml="dracon.countdown.title" defaultText="Il conto alla rovescia è iniziato!" />
-        </h2>
-        {daysLeft !== null && (
-          <p className="mt-3 text-xl md:text-2xl font-light">
-            <T idml="dracon.countdown.days" defaultText="Mancano" />{" "}
-            <span className="font-bold text-green-900">{daysLeft}</span>{" "}
-            <T idml="dracon.countdown.toEvent" defaultText="giorni a DraCon Ischia!" />
-          </p>
-        )}
+  <section className="relative py-6 px-6 text-center">
+    {/* Countdown */}
+    <div className="mb-8">
+      <h2 className="text-3xl md:text-4xl font-extrabold drop-shadow-lg">
+        <T idml="dracon.countdown.title" defaultText="Il conto alla rovescia è iniziato!" />
+      </h2>
+      {daysLeft !== null && (
+        <p className="mt-3 text-xl md:text-2xl font-light">
+          <T idml="dracon.countdown.days" defaultText="Mancano" />{" "}
+          <span className="font-bold text-green-900">{daysLeft}</span>{" "}
+          <T idml="dracon.countdown.toEvent" defaultText="giorni a DraCon Ischia!" />
+        </p>
+      )}
+    </div>
+
+    {/* Highlights */}
+    <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div className="p-6 bg-green-700/40 rounded-xl shadow-lg border border-white/20 hover:scale-105 transition-transform">
+        <span className="text-5xl block mb-3">🎲</span>
+        <h3 className="text-xl font-bold mb-2">
+          <T idml="dracon.highlight.boardgames" defaultText="100+ Giochi da Tavolo" />
+        </h3>
+        <p className="text-sm text-white">
+          <T idml="dracon.highlight.boardgamesDesc" defaultText="Dai grandi classici alle ultime novità, trova sempre un tavolo pronto ad accoglierti." />
+        </p>
       </div>
 
-      {/* Highlights */}
-      <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+  {/* Sessioni GDR Gratuite */}
+  <Link href="/draconischia/gdr-sessions" className="block relative group">
+    <div className="absolute right-0 bg-white text-black px-3 py-1 rounded-full shadow-md transform rotate-6 z-20 pointer-events-none">
+      <span className="font-bold text-xs">
+        <T idml="dracon.highlight.rpgReservation" defaultText="Prenotati qui" />
+        </span>
+    </div>
+
+    <div className="p-6 bg-green-700/40 rounded-xl shadow-lg border border-white/20 hover:scale-105 transition-transform">
+      <span className="text-5xl block mb-3">🧙‍♂️</span>
+      <h3 className="text-xl font-bold mb-2">
+        <T idml="dracon.highlight.rpg" defaultText="Sessioni GDR Gratuite" />
+      </h3>
+      <p className="text-sm text-white">
+        <T
+          idml="dracon.highlight.rpgDesc"
+          defaultText="Prenota la tua avventura ed entra nei panni del tuo eroe."
+        />
+      </p>
+    </div>
+  </Link>
+
+
+      {/* Main Events */}
+    <Link href="/draconischia/main-events" className="block relative group">
+        <div className="absolute right-0 bg-white text-black px-3 py-1 rounded-full shadow-md transform rotate-6 z-20 pointer-events-none">
+          <span className="font-bold text-xs">
+            <T idml="dracon.highlight.rpgReservation" defaultText="Prenotati qui" />
+            </span>
+        </div>
+
         <div className="p-6 bg-green-700/40 rounded-xl shadow-lg border border-white/20 hover:scale-105 transition-transform">
-          <span className="text-5xl block mb-3">🎲</span>
+          <span className="text-5xl block mb-3">🏆</span>
           <h3 className="text-xl font-bold mb-2">
-            <T idml="dracon.highlight.boardgames" defaultText="100+ Giochi da Tavolo" />
+            <T idml="dracon.highlight.mainEvents" defaultText="Main Events con premi epici" />
           </h3>
           <p className="text-sm text-white">
-            <T idml="dracon.highlight.boardgamesDesc" defaultText="Dai grandi classici alle ultime novità, trova sempre un tavolo pronto ad accoglierti." />
+            <T
+              idml="dracon.highlight.mainEventsDesc"
+              defaultText="Sfida i migliori giocatori e dimostra il tuo valore."
+            />
           </p>
-        </div>
-
-        {/* Sessioni GDR Gratuite */}
-        <div className="relative group">
-        <Link href="/draconischia/gdr-sessions" className="absolute inset-0 z-10" />
-        <div className="relative z-0 p-6 bg-green-700/40 rounded-xl shadow-lg border border-white/20 hover:scale-105 transition-transform">
-            <span className="text-5xl block mb-3">🧙‍♂️</span>
-            <h3 className="text-xl font-bold mb-2">
-            <T idml="dracon.highlight.rpg" defaultText="Sessioni GDR Gratuite" />
-            </h3>
-            <p className="text-sm text-white">
-            <T
-                idml="dracon.highlight.rpgDesc"
-                defaultText="Prenota la tua avventura ed entra nei panni del tuo eroe."
-            />
-            </p>
-        </div>
-        </div>
-
-        {/* Main Events */}
-        <div className="relative group">
-        <Link href="/draconischia/main-events" className="absolute inset-0 z-10" />
-        <div className="relative z-0 p-6 bg-green-700/40 rounded-xl shadow-lg border border-white/20 hover:scale-105 transition-transform">
-            <span className="text-5xl block mb-3">🏆</span>
-            <h3 className="text-xl font-bold mb-2">
-            <T
-                idml="dracon.highlight.mainEvents"
-                defaultText="Main Events con premi epici"
-            />
-            </h3>
-            <p className="text-sm text-white">
-            <T
-                idml="dracon.highlight.mainEventsDesc"
-                defaultText="Sfida i migliori giocatori e dimostra il tuo valore."
-            />
-            </p>
-        </div>
-        </div>
 
       </div>
-    </section>
-  )
+    </Link>
+    </div>
+  </section>
+)
+
 }

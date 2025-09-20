@@ -1,6 +1,5 @@
 "use client";
 import { T } from "@/components/ui/T";
-import Link from "next/link";
 
 export default function DraConInfoSectionComponent() {
   return (
@@ -14,7 +13,8 @@ export default function DraConInfoSectionComponent() {
         </h2>
 
         {/* Info Cards */}
-        <div className="grid md:grid-cols-4 gap-8 mb-12">
+        <div className="grid md:grid-cols-5 gap-8 mb-12">
+          {/* Location */}
           <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
             <h3 className="text-xl font-bold mb-2">
               📍 <T idml="dracon.info.location" defaultText="Dove si svolge" />
@@ -27,6 +27,7 @@ export default function DraConInfoSectionComponent() {
             </p>
           </div>
 
+          {/* Accesso */}
           <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
             <h3 className="text-xl font-bold mb-2">
               🎟️{" "}
@@ -38,11 +39,12 @@ export default function DraConInfoSectionComponent() {
             <p className="text-gray-600">
               <T
                 idml="dracon.info.accessDesc"
-                defaultText="Ingresso gratuito. Prenotazione obbligatoria per GDR e tornei."
+                defaultText="Ingresso gratuito. Prenotazione obbligatoria per GDR e tornei (a pagamento)."
               />
             </p>
           </div>
 
+          {/* Programma */}
           <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
             <h3 className="text-xl font-bold mb-2">
               📅 <T idml="dracon.info.program" defaultText="Programma" />
@@ -53,15 +55,9 @@ export default function DraConInfoSectionComponent() {
                 defaultText="Scopri tutti gli appuntamenti e gli eventi speciali."
               />
             </p>
-            <Link
-              href="/draconischia/agenda"
-              className="inline-block bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-500 transition"
-            >
-              <T idml="dracon.info.cta" defaultText="Vai al Programma" />
-            </Link>
           </div>
 
-          {/* Nuova Card Data & Orario */}
+          {/* Date & Orari */}
           <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
             <h3 className="text-xl font-bold mb-2">
               ⏰ <T idml="dracon.info.dateTime" defaultText="Date e Orari" />
@@ -70,6 +66,19 @@ export default function DraConInfoSectionComponent() {
               <T
                 idml="dracon.info.dateTimeDesc"
                 defaultText="11 e 12 Ottobre · dalle 15:00 alle 00:00"
+              />
+            </p>
+          </div>
+
+          {/* Pausa Cena */}
+          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-bold mb-2">
+              🍔 <T idml="dracon.info.dinner" defaultText="Pausa Cena" />
+            </h3>
+            <p className="text-gray-600">
+              <T
+                idml="dracon.info.dinnerDesc"
+                defaultText="Dalle 20:00 alle 21:00"
               />
             </p>
           </div>

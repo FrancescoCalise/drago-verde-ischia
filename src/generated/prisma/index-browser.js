@@ -142,6 +142,7 @@ exports.Prisma.GdrSessionScalarFieldEnum = {
   start: 'start',
   end: 'end',
   master: 'master',
+  gameReference: 'gameReference',
   availableSeats: 'availableSeats',
   created_at: 'created_at',
   updated_at: 'updated_at'

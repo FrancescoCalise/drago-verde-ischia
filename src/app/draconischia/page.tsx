@@ -7,6 +7,8 @@ import DraConStorytellingComponent from "@/components/dracon-ischia/Storytelling
 import DraConInfoSectionComponent from "@/components/dracon-ischia/InfoSection"
 import DraConProgramPreviewComponent from "@/components/dracon-ischia/ProgramPreview"
 import DraConLocationMapComponent from "@/components/dracon-ischia/LocationMaps"
+import DraConDinnerComponent from "@/components/dracon-ischia/Dinner"
+import DraConSponsorsComponent from "@/components/dracon-ischia/Sponsor"
 
 export default function DraconIschiaPage() {
 
@@ -33,8 +35,10 @@ export default function DraconIschiaPage() {
       <DraconCountdownHighlightsComponent />
       <DraConStorytellingComponent />
       <DraConInfoSectionComponent />
+      <DraConDinnerComponent />
       <DraConProgramPreviewComponent />
       <DraConLocationMapComponent />  
+      <DraConSponsorsComponent />
     </main>
   )
 }

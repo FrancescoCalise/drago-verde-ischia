@@ -1,16 +1,11 @@
-import { MainEventRegistration } from "./MainEventRegistration"
+// src/interfaces/MainEvent.ts
+import { MainEvent, MainEventRegistration, AppUser } from "@/generated/prisma"
 
-export interface MainEvent {
-  id?: string
-  title: string
-  urlImg?: string
-  description: string
-  start: Date | null
-  end: Date | null
-  location: string
-  price: number
-  maxSeats: number
-  note?: string
-  mainEventRegistrations?: MainEventRegistration[]
-  _count?: { mainEventRegistrations: number } // conteggio registrazioni
+export interface MainEventRegistrationExtended extends MainEventRegistration {
+  user?: Pick<AppUser, "id" | "username" | "name" | "surname">
+}
+
+export interface MainEventExtended extends MainEvent {
+  mainEventRegistrations?: MainEventRegistrationExtended[]
+  _count?: { mainEventRegistrations: number }
 }

@@ -1,38 +1,55 @@
-import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { requireAuth } from "@/lib/authMiddleware"
 import { UserRole } from "@/interfaces/UserRole"
-
+import { errorResponse, successResponse } from "@/lib/apiResponse"
+import { trackError } from "@/services/errorTracker"
 export const runtime = "nodejs"
 
-// Update Session (PUT)
 export async function PUT(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await requireAuth(req, [UserRole.ADMIN])
-    if (!auth.ok) return auth.response;
+    if (!auth.ok) return auth.response
 
     const { id } = await context.params
-    const body = await req.json()
-    const { title, description, urlImg, start, end, master, availableSeats } = body
+    const { title, description, urlImg, start, end, master, availableSeats, gameReference } =
+      await req.json()
 
+    // 🔹 Validazioni
     const startDt = new Date(start)
     const endDt = new Date(end)
 
     if (isNaN(startDt.getTime()) || isNaN(endDt.getTime())) {
-      return NextResponse.json({ error: "Date non valide" }, { status: 400 })
+      return errorResponse("gdr_sessions.invalid_dates", "Date non valide", 400)
     }
     if (endDt <= startDt) {
-      return NextResponse.json({ error: "Fine deve essere dopo l'inizio" }, { status: 400 })
+      return errorResponse(
+        "gdr_sessions.invalid_time_range",
+        "L'ora di fine deve essere successiva all'inizio",
+        400
+      )
     }
 
     const seats = Number(availableSeats)
     if (!Number.isInteger(seats) || seats < 1) {
-      return NextResponse.json({ error: "Posti disponibili non validi" }, { status: 400 })
+      return errorResponse(
+        "gdr_sessions.invalid_seats",
+        "Posti disponibili non validi",
+        400
+      )
     }
 
+    if (!gameReference) {
+      return errorResponse(
+        "gdr_sessions.missing_game_reference",
+        "Il gioco di riferimento è obbligatorio",
+        400
+      )
+    }
+
+    // 🔹 Update
     const updated = await prisma.gdrSession.update({
       where: { id },
       data: {
@@ -43,13 +60,19 @@ export async function PUT(
         end: endDt,
         master: String(master).trim(),
         availableSeats: seats,
+        gameReference: String(gameReference).trim(),
       },
     })
 
-    return NextResponse.json(updated, { status: 200 })
+    return successResponse(
+      updated,
+      "gdr_sessions.update_success",
+      "Sessione GDR aggiornata con successo",
+      200
+    )
   } catch (err) {
-    console.error("Errore update sessione:", err)
-    return NextResponse.json({ error: "Errore server" }, { status: 500 })
+    trackError(err, "PUT /api/draconischia/gdr-sessions/[id]")
+    return errorResponse("gdr_sessions.update_error", "Errore durante l'aggiornamento della sessione GDR", 500)
   }
 }
 
@@ -60,7 +83,7 @@ export async function DELETE(
 ) {
   try {
     const auth = await requireAuth(req, [UserRole.ADMIN])
-    if (!auth.ok) return auth.response;
+    if (!auth.ok) return auth.response
 
     const { id } = await context.params
 
@@ -68,9 +91,18 @@ export async function DELETE(
       where: { id },
     })
 
-    return NextResponse.json({ message: "Sessione eliminata" }, { status: 200 })
+    return successResponse(
+      null,
+      "gdr_sessions.delete_success",
+      "Sessione eliminata con successo",
+      200
+    )
   } catch (err) {
-    console.error("Errore eliminazione sessione:", err)
-    return NextResponse.json({ error: "Errore server" }, { status: 500 })
+    trackError(err, "DELETE /api/draconischia/gdr-sessions/[id]")
+    return errorResponse(
+      "gdr_sessions.delete_error",
+      "Errore durante l'eliminazione della sessione",
+      500
+    )
   }
 }

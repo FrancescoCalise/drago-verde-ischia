@@ -13,6 +13,8 @@ import { T } from "@/components/ui/T"
 import { ResponsiveCard } from "@/components/ui/custom/ResponsiveCard"
 import { httpFetch } from "@/services/http/httpFetch"
 import { useApiHandler } from "@/app/hooks/useApiHandler"
+import { useAuth } from "@/context/AuthContext"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -30,7 +32,9 @@ export default function RegisterPage() {
   const [emailError, setEmailError] = useState("")
   const [phoneError, setPhoneError] = useState("")
   const { handleResponse } = useApiHandler()
-
+  const { user } = useAuth()
+  const router = useRouter()
+  
   useEffect(() => {
     if (form.name && form.surname) {
       const generatedUsername = `${form.name.toLowerCase()}.${form.surname.toLowerCase()}`.replace(/\s+/g, "_")
@@ -45,6 +49,17 @@ export default function RegisterPage() {
     const phoneValid = !phoneError
     setIsFormValid(allFilled && passwordsMatch && emailValid && phoneValid)
   }, [form, emailError, phoneError])
+
+  useEffect(() => {
+    if (user) {
+      toast.info("Sei già registrato e loggato")
+      router.push("/")
+    }
+  }, [user, router])
+
+  if (user) {
+    return null // evita di renderizzare il form mentre fa redirect
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

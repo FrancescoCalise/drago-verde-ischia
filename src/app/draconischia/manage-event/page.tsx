@@ -1,36 +1,42 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import { showError, showInfo, showSuccess } from "@/lib/toast";
-import SessionForm from "@/components/forms/SessionForm";
-import MainEventForm from "@/components/forms/MainEventForm";
-import { GdrSession } from "@/interfaces/GdrSession";
-import { MainEvent } from "@/interfaces/MainEvent";
-import { getOnlyDate, getOnlyTime } from "@/lib/manageDataUtils";
-import { UserRole } from "@/interfaces/UserRole";
-import * as React from "react";
-import { useModal } from "@/lib/modal";
-import { httpFetch } from "@/services/http/httpFetch";
+import { useEffect, useState, useCallback } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
+import { showError, showInfo } from "@/lib/toast"
+import SessionForm from "@/components/forms/SessionForm"
+import MainEventForm from "@/components/forms/MainEventForm"
+import { getOnlyDate, getOnlyTime } from "@/lib/manageDataUtils"
+import { UserRole } from "@/interfaces/UserRole"
+import { useModal } from "@/lib/modal"
+import { httpFetch } from "@/services/http/httpFetch"
+import { ApiResponse } from "@/interfaces/ApiResponse"
+import { MainEventExtended, MainEventRegistrationExtended } from "@/interfaces/MainEvent"
+import { GdrSessionExtended, GdrSessionRegistrationExtended } from "@/interfaces/GdrSession"
+import { useApiHandler } from "@/app/hooks/useApiHandler"
 
-interface ManageSectionProps<T extends { id?: string }> {
-  title: string;
-  addLabel: string;
-  addIdml: string; // es. "manageEventPage.addSession"
-  editIdml: string; // es. "manageEventPage.editSession"
-  editTitle: string; // es. "Modifica Sessione"
-  addModal: React.ComponentType<any>;
-  editModal: React.ComponentType<any>;
-  items: T[];
-  type: "session" | "event";
-  onFetch: () => void;
-  onDelete: (id: string, type: "session" | "event") => void;
-  renderInfo: (item: T) => React.ReactNode;
+interface ManageSectionProps<
+  T extends { id: string },
+  MProps extends object
+> {
+  title: string
+  addLabel: string
+  addIdml: string
+  editIdml: string
+  editTitle: string
+  addModal: React.ComponentType<MProps>
+  editModal: React.ComponentType<MProps>
+  items: T[]
+  type: "session" | "event"
+  onFetch: () => void
+  onDelete: (id: string, type: "session" | "event") => void
+  renderInfo: (item: T) => React.ReactNode
 }
 
-export function ManageSection<T extends { id?: string }>({
+export function ManageSection<
+  T extends { id: string },
+  MProps extends object
+>({
   title,
   addLabel,
   addIdml,
@@ -43,8 +49,8 @@ export function ManageSection<T extends { id?: string }>({
   onFetch,
   onDelete,
   renderInfo,
-}: ManageSectionProps<T>) {
-  const { openModal } = useModal();
+}: ManageSectionProps<T, MProps>) {
+  const { openModal } = useModal()
 
   return (
     <section className="mb-12">
@@ -53,8 +59,8 @@ export function ManageSection<T extends { id?: string }>({
         <button
           onClick={() =>
             openModal(addModal, addIdml, addLabel, {
-              onSuccess: () => onFetch(),
-            })
+              onSuccess: onFetch,
+            } as MProps)
           }
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
         >
@@ -75,27 +81,22 @@ export function ManageSection<T extends { id?: string }>({
               key={item.id}
               className="bg-white rounded-lg shadow p-4 flex justify-between items-start"
             >
-              {/* Info */}
               <div>{renderInfo(item)}</div>
-
-              {/* Pulsanti azione */}
               <div className="flex gap-2 self-start">
                 <button
                   className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                   onClick={() =>
-                    openModal(
-                      editModal,
-                      editIdml,
-                      editTitle,
-                      { [type]: item, onSuccess: () => onFetch() } // es. { session: s } o { event: e }
-                    )
+                    openModal(editModal, editIdml, editTitle, {
+                      [type]: item,
+                      onSuccess: onFetch,
+                    } as MProps)
                   }
                 >
                   ✏️ Edit
                 </button>
                 <button
                   className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                  onClick={() => item.id && onDelete(item.id, type)}
+                  onClick={() => onDelete(item.id, type)}
                 >
                   🗑️ Delete
                 </button>
@@ -105,71 +106,74 @@ export function ManageSection<T extends { id?: string }>({
         </div>
       )}
     </section>
-  );
+  )
 }
 
 export default function ManageEventPage() {
-  const { user, loading: authLoading } = useAuth();
-  const router = useRouter();
-  const [sessions, setSessions] = useState<GdrSession[]>([]);
-  const [events, setEvents] = useState<MainEvent[]>([]);
+  const { user, loading: authLoading } = useAuth()
+  const router = useRouter()
+  const [sessions, setSessions] = useState<GdrSessionExtended[]>([])
+  const [events, setEvents] = useState<MainEventExtended[]>([])
+  const { handleResponse } = useApiHandler();
 
-  // Solo admin
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [sRes, eRes]: [ApiResponse<GdrSessionExtended[]>, ApiResponse<MainEventExtended[]>] =
+        await Promise.all([
+          httpFetch<GdrSessionExtended[]>("/api/draconischia/gdr-sessions", "GET", null, false),
+          httpFetch<MainEventExtended[]>("/api/draconischia/main-events", "GET", null, false),
+        ])
+
+      if (sRes.success && sRes.data) setSessions(sRes.data)
+      if (eRes.success && eRes.data) setEvents(eRes.data)
+    } catch {
+      showError("Errore durante il caricamento dei dati")
+    }
+  }, [])
+
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading) return
 
     if (!user) {
-      showInfo("Effettua il login per accedere");
-      router.push("/user/login");
+      showInfo("Effettua il login per accedere")
+      router.push("/user/login")
     } else if (user.role !== UserRole.ADMIN) {
-      showError("❌ Non sei autorizzato");
-      router.push("/draconischia");
+      showError("❌ Non sei autorizzato")
+      router.push("/draconischia")
     } else {
-      fetchData();
+      fetchData()
     }
-  }, [authLoading, user, router]);
-
-  const fetchData = async () => {
-    try {
-      const [sRes, eRes] = await Promise.all([
-        httpFetch<GdrSession[]>("/api/draconischia/gdr-sessions", "GET", null, false),
-        httpFetch<MainEvent[]>("/api/draconischia/main-events", "GET", null, false),
-      ]);
-      if (!sRes.success || !eRes.success) throw new Error("Errore caricamento dati");
-      const [sData, eData] = await Promise.all([sRes.data, eRes.data]);
-      if(sData) setSessions(sData);
-      if(eData) setEvents(eData);
-    } catch  {
-    }
-  };
+  }, [authLoading, user, router, fetchData])
 
   const handleDelete = async (id: string, type: "session" | "event") => {
-    if (id === undefined || id === null) {
-      showError(`${type === "session" ? "Sessione" : "Evento"} non trovato`);
-      return;
-    }
+  const url =
+    type === "session"
+      ? `/api/draconischia/gdr-sessions/${id}`
+      : `/api/draconischia/main-events/${id}`
 
-    try {
-      const url =
-        type === "session"
-          ? `/api/draconischia/gdr-sessions/${id}`
-          : `/api/draconischia/main-events/${id}`;
+  const res = await httpFetch<null>(url, "DELETE", null, true)
 
-      const res = await httpFetch(url, "DELETE", null, true);
-      if (res.success) {
-        showSuccess("✅ Eliminato con successo");
-        fetchData();
-      } 
-    } catch{
+  handleResponse(res, () => {
+    // Aggiornamento ottimistico della UI
+    if (type === "session") {
+      setSessions((prev) => prev.filter((s) => s.id !== id))
+    } else {
+      setEvents((prev) => prev.filter((e) => e.id !== id))
     }
-  };
+    // Refetch in background per allineare i dati
+    fetchData()
+  })
+}
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-12">
+    <main className="min-h-screen max-w-6xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-bold mb-8">Gestione Evento</h1>
 
-      {/* Sessioni GDR */}
-      <ManageSection
+      <ManageSection<
+        GdrSessionExtended,
+        { session: GdrSessionExtended; onSuccess: () => void }
+      >
         title="Sessioni GDR"
         addLabel="Nuova Sessione"
         addIdml="manageEventPage.addSession"
@@ -182,34 +186,31 @@ export default function ManageEventPage() {
         onFetch={fetchData}
         onDelete={handleDelete}
         renderInfo={(s) => {
-          const startDate = s.start as Date;
-          const endDate = s.end as Date;
-          const regs =
-            (s as any).registrations ?? (s as any).gdrSessionRegistrations; // compat con vecchio nome
+          const regs: GdrSessionRegistrationExtended[] = s.gdrSessionRegistrations || []
           return (
             <>
               <h3 className="font-bold">{s.title}</h3>
-              <p className="text-sm">📅 {getOnlyDate(startDate)}</p>
+              <p className="text-sm">📅 {getOnlyDate(new Date(s.start))}</p>
               <p className="text-sm">
-                ⏰ {getOnlyTime(startDate)} - {getOnlyTime(endDate)}
+                ⏰ {getOnlyTime(new Date(s.start))} - {getOnlyTime(new Date(s.end))}
               </p>
               <p>
-                Posti: {s.availableSeats - (regs?.length ?? 0)} /{" "}
-                {s.availableSeats}
+                Posti: {s.availableSeats - regs.length} / {s.availableSeats}
               </p>
               <p className="text-sm">🎲 Master: {s.master}</p>
               <p>
                 Iscritti:{" "}
-                {regs?.map((r: any) => r.user?.username).join(", ") ||
-                  "Nessuno"}
+                {regs.map((r) => r.user?.username).join(", ") || "Nessuno"}
               </p>
             </>
-          );
+          )
         }}
       />
 
-      {/* Main Event (tornei) */}
-      <ManageSection
+      <ManageSection<
+        MainEventExtended,
+        { event: MainEventExtended; onSuccess: () => void }
+      >
         title="Main Events (Tornei)"
         addLabel="Nuovo Main Event"
         addIdml="manageEventPage.addMainEvent"
@@ -222,26 +223,24 @@ export default function ManageEventPage() {
         onFetch={fetchData}
         onDelete={handleDelete}
         renderInfo={(e) => {
-          const regs = (e as any).mainEventRegistrations;
+          const regs: MainEventRegistrationExtended[] = e.mainEventRegistrations || []
           return (
             <>
               <h3 className="font-bold">{e.title}</h3>
-              <p>📅 {getOnlyDate(e.start as Date)}</p>
+              <p>📅 {getOnlyDate(new Date(e.start))}</p>
               <p>
-                ⏰ {getOnlyTime(e.start as Date)} - {getOnlyTime(e.end as Date)}
+                ⏰ {getOnlyTime(new Date(e.start))} - {getOnlyTime(new Date(e.end))}
               </p>
               <p>
-                Posti: {e.maxSeats - (regs?.length ?? 0)} / {e.maxSeats}
+                Posti: {e.maxSeats - regs.length} / {e.maxSeats}
               </p>
               <p>
-                Iscritti:{" "}
-                {regs?.map((r: any) => r.user?.username).join(", ") ||
-                  "Nessuno"}
+                Iscritti: {regs.map((r) => r.user?.username).join(", ") || "Nessuno"}
               </p>
             </>
-          );
+          )
         }}
       />
     </main>
-  );
+  )
 }
